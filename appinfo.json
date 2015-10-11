@@ -1,0 +1,37 @@
+{
+  "uuid": "ffb5b31d-a0e7-4452-9592-d1ce204b1191",
+  "shortName": "Minimalist",
+  "longName": "Minimalist",
+  "companyName": "phdesign",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": [
+      {
+        "type": "font",
+        "name": "FONT_IMAGINE_36",
+        "file": "fonts/imagine.ttf",
+        "compatibility":"2.7"
+      },
+      {
+        "type": "font",
+        "name": "FONT_IMAGINE_24",
+        "file": "fonts/imagine.ttf",
+        "compatibility":"2.7"
+      },
+      {
+        "menuIcon": true,
+        "type": "png",
+        "name": "IMAGE_MENU_ICON",
+        "file": "images/menu_icon.png"
+      }
+    ]
+  }
+}
