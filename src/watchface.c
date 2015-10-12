@@ -65,6 +65,9 @@ static void main_window_unload(Window *window) {
 
   text_layer_destroy(s_time_layer);
   fonts_unload_custom_font(s_time_font);
+
+  text_layer_destroy(s_date_layer);
+  fonts_unload_custom_font(s_date_font);
 }
 
 static void init() {
