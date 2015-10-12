@@ -9,8 +9,10 @@
   "watchapp": {
     "watchface": true
   },
+  "capabilities": ["location"],
   "appKeys": {
-    "dummy": 0
+    "KEY_TEMPERATURE": 0,
+    "KEY_CONDITIONS": 1
   },
   "resources": {
     "media": [
@@ -23,6 +25,12 @@
       {
         "type": "font",
         "name": "FONT_IMAGINE_20",
+        "file": "fonts/imagine.ttf",
+        "compatibility":"2.7"
+      },
+      {
+        "type": "font",
+        "name": "FONT_IMAGINE_16",
         "file": "fonts/imagine.ttf",
         "compatibility":"2.7"
       },
