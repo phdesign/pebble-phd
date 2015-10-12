@@ -1,2 +1,2 @@
 # PHD
-A watchface for pebble
+A minimalistic digital watchface for pebble with date
