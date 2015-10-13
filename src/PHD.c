@@ -60,6 +60,8 @@ static void init() {
   struct tm *tick_time = localtime(&temp);
   time_update(tick_time);
   date_update(tick_time);
+
+  weather_init();
 }
 
 static void deinit() {

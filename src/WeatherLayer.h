@@ -3,6 +3,8 @@
 
 #include <pebble.h>
 
+#define WEATHER_UPDATE_MINS 15
+
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
 

@@ -61,8 +61,8 @@ void weather_update(struct tm *tick_time) {
   if (!s_loaded)
     return;
 
-  // Get weather update every 30 minutes
-  if(tick_time->tm_min % 1 == 0) {
+  // Get weather update at a regular interval
+  if(tick_time->tm_min % WEATHER_UPDATE_MINS == 0) {
     // Begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
