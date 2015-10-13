@@ -18,8 +18,6 @@ def options(ctx):
 
 def configure(ctx):
     ctx.load('pebble_sdk')
-    # Always pass the '--config pebble-jshintrc' option to jshint
-    jshint.bake(['--config', 'pebble-jshintrc'])
 
 def build(ctx):
     ctx.load('pebble_sdk')
