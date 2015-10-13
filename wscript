@@ -7,6 +7,9 @@
 
 import os.path
 
+# Use the python sh module to run the jshint command
+from sh import jshint
+
 top = '.'
 out = 'build'
 
@@ -15,9 +18,14 @@ def options(ctx):
 
 def configure(ctx):
     ctx.load('pebble_sdk')
+    # Always pass the '--config pebble-jshintrc' option to jshint
+    jshint.bake(['--config', 'pebble-jshintrc'])
 
 def build(ctx):
     ctx.load('pebble_sdk')
+
+    # Run jshint before compiling the app.
+    jshint("src/js/pebble-js-app.js")
 
     build_worker = os.path.exists('worker_src')
     binaries = []
