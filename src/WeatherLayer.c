@@ -1,17 +1,22 @@
 /*******************************
- * Date Layer
+ * Weather Layer
  *******************************/
 
 #include "PHD.h"
 #include "WeatherLayer.h"
 
 static TextLayer *s_weather_layer;
+static bool s_loaded = false;
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
   static char temperature_buffer[8];
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
+
+  // We'll be sent a message when the js first loads
+  if (!s_loaded)
+    s_loaded = true;
 
   // Read first item
   Tuple *t = dict_read_first(iterator);
@@ -53,8 +58,11 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 }
 
 void weather_update(struct tm *tick_time) {
+  if (!s_loaded)
+    return;
+
   // Get weather update every 30 minutes
-  if(tick_time->tm_min % 30 == 0) {
+  if(tick_time->tm_min % 1 == 0) {
     // Begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
