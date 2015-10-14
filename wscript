@@ -6,9 +6,7 @@
 #
 
 import os.path
-
-# Use the python sh module to run the jshint command
-from sh import jshint
+from sh import grunt
 
 top = '.'
 out = 'build'
@@ -22,8 +20,7 @@ def configure(ctx):
 def build(ctx):
     ctx.load('pebble_sdk')
 
-    # Run jshint before compiling the app.
-    jshint("src/js/pebble-js-app.js")
+    grunt()
 
     build_worker = os.path.exists('worker_src')
     binaries = []
