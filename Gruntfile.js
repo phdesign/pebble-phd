@@ -21,20 +21,32 @@ module.exports = function(grunt) {
     },
 
     concat: {
-      dist: {
+      build: {
         src: [
-          'src/js/**/*.js',
-          '-src/js/pebble-js-app.js'
+          'src/js/utils.js',
+          'src/js/open-weather-map.js'
+          //'src/js/**/*.js',
+          //'-src/js/pebble-js-app.js'
         ],
         dest: 'src/js/pebble-js-app.js'
       }
+    },
+
+  jasmine: {
+    build: {
+      src: 'src/js/pebble-js-app.js',
+      options: {
+        specs: 'test/js/*.spec.js'
+      }
     }
+  }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-  grunt.registerTask('default', ['jshint', 'concat']);
+  grunt.registerTask('default', ['jshint', 'concat', 'jasmine']);
 
 };
