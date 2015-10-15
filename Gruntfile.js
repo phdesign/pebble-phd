@@ -13,7 +13,8 @@ module.exports = function(grunt) {
       files: [
         'Gruntfile.js', 
         'src/js/**/*.js',
-        '-src/js/pebble-js-app.js'
+        '!src/js/pebble-js-app.js',
+        'test/js/**/*.js'
       ],
       options: {
         jshintrc: true
@@ -24,7 +25,7 @@ module.exports = function(grunt) {
       build: {
         src: [
           'src/js/**/*.js',
-          '-src/js/pebble-js-app.js'
+          '!src/js/pebble-js-app.js'
         ],
         dest: 'src/js/pebble-js-app.js'
       }
@@ -34,32 +35,19 @@ module.exports = function(grunt) {
       build: {
         src: 'src/js/pebble-js-app.js',
         options: {
-          helpers: [
-            'test/js/mocks.js',
-            'test/js/fixtures.js'
-          ],
-          specs: 'test/js/*.spec.js'
+          helpers: 'test/js/helpers/*.js',
+          specs: 'test/js/specs/*.spec.js',
+          outfile: 'test/js/_SpecRunner.html',
+          keepRunner: true
         }
       }
     },
-
-    requirejs: {
-      build: {
-        options: {
-          baseUrl: "src/js",
-          mainConfigFile: "src/js/app.js",
-          //name: "path/to/almoud", // assumes a production build using almond
-          out: "src/js/pebble-js-app.js"
-        }
-      }
-    }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
-  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   grunt.registerTask('default', ['jshint', 'concat', 'jasmine']);
 

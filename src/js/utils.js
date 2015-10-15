@@ -1,4 +1,5 @@
 var app = (function(app) {
+  console.log('utils loaded');
 
   app.utils = {
     
@@ -15,4 +16,4 @@ var app = (function(app) {
 
   return app;
 
-}(app || {}));
+})(app || {});

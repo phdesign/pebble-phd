@@ -1,4 +1,5 @@
 var app = (function(app) {
+  var weatherApi;
 
   function getLocation(fn) {
     navigator.geolocation.getCurrentPosition(
@@ -12,7 +13,10 @@ var app = (function(app) {
     );
   }
 
-  function sendWeather(weatherApi) {
+  function sendWeather() {
+    if (!weatherApi)
+      { console.error('Weather api provider has not been selected'); }
+
     getLocation(function(latitude, longitude) {
       weatherApi.getCurrentConditions(latitude, longitude, function(temperature, conditions) {
           // Assemble dictionary using our keys
@@ -36,9 +40,9 @@ var app = (function(app) {
 
   function init() {
     // Determine which weather provider to use
-    var weatherApi = app.openWeatherMapApi;
+    weatherApi = app.openWeatherMapApi;
     // Get the initial weather
-    sendWeather(weatherApi);
+    sendWeather();
   }
 
   // Listen for when the watchface is opened
@@ -57,4 +61,5 @@ var app = (function(app) {
     }                     
   );
 
-}(app || {}));
+  return app;
+})(app || {});

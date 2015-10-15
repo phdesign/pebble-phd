@@ -5,3 +5,4 @@ others
 node_modules
 keys.json
 src/js/pebble-js-app.js
+.grunt

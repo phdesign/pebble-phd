@@ -1,4 +1,5 @@
 var app = (function(app) {
+  console.log('openWeatherMapApi loaded');
 
   app.openWeatherMapApi = {
 
@@ -31,4 +32,4 @@ var app = (function(app) {
 
   return app;
 
-}(app || {}));
+})(app || {});
