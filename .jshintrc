@@ -5,11 +5,12 @@
  */
 {
   // Declares the existence of a global 'Pebble' object
-  "globals": { "Pebble" : true, "module": true },
+  "globals": { "Pebble" : true },
 
   // And standard objects (XMLHttpRequest and console)
   "browser": true,
   "devel": true,
+  "node": true,
 
   // Do not mess with standard JavaScript objects (Array, Date, etc)
   "freeze": true,

@@ -14,20 +14,27 @@ module.exports = function(grunt) {
         'Gruntfile.js', 
         'src/js/**/*.js',
         '!src/js/pebble-js-app.js',
-        'test/js/**/*.js'
+        'test/js/specs/**/*.js',
+        'test/js/helpers/**/*.js'
       ],
       options: {
         jshintrc: true
       }
     },
 
-    concat: {
+    browserify: {
       build: {
         src: [
           'src/js/**/*.js',
           '!src/js/pebble-js-app.js'
         ],
         dest: 'src/js/pebble-js-app.js'
+      },
+      test: {
+        src: [
+          'test/js/specs/open-weather-map.spec.js',
+        ],
+        dest: 'test/js/specs-bundle.js'
       }
     },
 
@@ -36,19 +43,19 @@ module.exports = function(grunt) {
         src: 'src/js/pebble-js-app.js',
         options: {
           helpers: 'test/js/helpers/*.js',
-          specs: 'test/js/specs/*.spec.js',
+          specs: 'test/js/specs-bundle.js',
           outfile: 'test/js/_SpecRunner.html',
           keepRunner: true
         }
       }
-    },
+    }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-  grunt.registerTask('default', ['jshint', 'concat', 'jasmine']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'jasmine']);
 
 };

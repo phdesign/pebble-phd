@@ -1,3 +1,4 @@
+/*
 var app = (function(app) {
 
   var stateIds = {
@@ -70,3 +71,4 @@ var app = (function(app) {
   return app;
 
 })(app || {});
+*/

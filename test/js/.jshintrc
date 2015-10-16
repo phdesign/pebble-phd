@@ -26,6 +26,7 @@
   // And standard objects (XMLHttpRequest and console)
   "browser": true,
   "devel": true,
+  "node": true,
 
   // Do not mess with standard JavaScript objects (Array, Date, etc)
   "freeze": true,
