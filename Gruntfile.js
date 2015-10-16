@@ -32,7 +32,7 @@ module.exports = function(grunt) {
       },
       test: {
         src: [
-          'test/js/specs/open-weather-map.spec.js',
+          'test/js/specs/*.spec.js',
         ],
         dest: 'test/js/specs-bundle.js'
       }

@@ -1,7 +1,10 @@
+var utils = require('../../../src/js/utils.js');
+var app = require('../../../src/js/app.js');
+
 describe("app", function() {
 
   beforeEach(function() {
-    spyOn(app.utils, 'ajax').and.callFake(function(url, method, fn) {
+    spyOn(utils, 'ajax').and.callFake(function(url, method, fn) {
       fn(fixtures.openWeatherMapResponse);
     });
 
