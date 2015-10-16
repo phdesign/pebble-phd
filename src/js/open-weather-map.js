@@ -1,29 +1,37 @@
 var app = (function(app) {
-  console.log('openWeatherMapApi loaded');
+
+  var buildRequestUrl = function(lat, lon) {
+      return 'http://api.openweathermap.org/data/2.5/weather?lat=' +
+          lat + '&lon=' + lon + '&APPID=15664341af304192147d1fb3f38a1f67';
+  };
+
+  var readWeatherValues = function(rawData) {
+    return {
+      temp: app.utils.kelvinToCelsius(rawData.main.temp),
+      conditions: rawData.weather[0].main 
+    };
+  };
 
   app.openWeatherMapApi = {
 
-    getCurrentConditions: function(latitude, longitude, fn) {
-      // Construct URL
-      var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' +
-          latitude + '&lon=' + longitude + '&APPID=15664341af304192147d1fb3f38a1f67';
+    getCurrentConditions: function(coords, done) {
+      var url = buildRequestUrl(coords.latitude, coords.longitude);
 
-      // Send request to OpenWeatherMap
       app.utils.ajax(url, 'GET', 
         function(responseText) {
-          // responseText contains a JSON object with weather info
-          //console.log(responseText);
+          console.log('Received weather data from Open Weather Map');
+
           var json = JSON.parse(responseText);
+          var values = readWeatherValues(json);
+         
+          if (!values || !values.temp || !values.conditions) {
+            console.log('Unable to process weather data, aborting...');
+            return;
+          }
+          console.log('Temperature is ' + values.temp);
+          console.log('Conditions are ' + values.conditions);
 
-          // Temperature in Kelvin requires adjustment
-          var temperature = Math.round(json.main.temp - 273.15);
-          console.log('Temperature is ' + temperature);
-
-          // Conditions
-          var conditions = json.weather[0].main;      
-          console.log('Conditions are ' + conditions);
-
-          fn(temperature, conditions);
+          done(values);
         }      
       );
     }

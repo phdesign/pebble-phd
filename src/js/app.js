@@ -1,10 +1,10 @@
 var app = (function(app) {
   var weatherApi;
 
-  function getLocation(fn) {
+  function getCoordinates(fn) {
     navigator.geolocation.getCurrentPosition(
       function(pos) { 
-        fn(pos.coords.latitude, pos.coords.longitude);
+        fn(pos.coords);
       },
       function(err) {
         console.log('Error requesting location!\n' + err);
@@ -17,12 +17,12 @@ var app = (function(app) {
     if (!weatherApi)
       { console.error('Weather api provider has not been selected'); }
 
-    getLocation(function(latitude, longitude) {
-      weatherApi.getCurrentConditions(latitude, longitude, function(temperature, conditions) {
+    getCoordinates(function(coords) {
+      weatherApi.getCurrentConditions(coords, function(values) {
           // Assemble dictionary using our keys
           var dictionary = {
-            'KEY_TEMPERATURE': temperature,
-            'KEY_CONDITIONS': conditions
+            'KEY_TEMPERATURE': values.temp,
+            'KEY_CONDITIONS': values.conditions
           };
 
           // Send to Pebble

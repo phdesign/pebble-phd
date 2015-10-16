@@ -38,9 +38,6 @@
    * Customize to your liking.
    */
 
-  // All variables should be in camelcase
-  "camelcase": true,
-
   // Do not allow blocks without { }
   "curly": true,
 
