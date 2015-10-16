@@ -2,11 +2,11 @@ var utils = require('./utils.js');
 var bom = require('bom-api');
 
 var readWeatherValues = function(rawData) {
-  var latestReading = rawData.observations.data[0];
+  var latestReading = rawData[0];
   return {
     temp: latestReading.air_temp,
     // BOM JSON feed doesn't really give a weather summary, best bet is their cloud reading.
-    conditions: latestReading.cloud === '-' ? '' : latestReading.cloud
+    conditions: '' //latestReading.cloud === '-' ? '' : latestReading.cloud
   };
 };
 
@@ -22,8 +22,8 @@ exports.getCurrentConditions = function(coords, done) {
     } catch (e) {
       console.log('Error processing weather data\n', e);
     }
-   
-    if (!values || !values.temp || !values.conditions) {
+    /*jshint -W041 */
+    if (!values || values.temp == null || values.conditions == null) {
       console.log('Unable to process weather data, aborting...');
       return;
     }
