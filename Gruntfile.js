@@ -23,6 +23,12 @@ module.exports = function(grunt) {
     },
 
     browserify: {
+      options: {
+        alias: {
+          'http': 'http-browserify',
+          'request': 'browser-request'
+        }
+      },
       build: {
         src: [
           'src/js/**/*.js',
@@ -31,6 +37,11 @@ module.exports = function(grunt) {
         dest: 'src/js/pebble-js-app.js'
       },
       test: {
+        options: {
+          browserifyOptions: {
+            debug: true
+          }
+        },
         src: [
           'test/js/specs/*.spec.js',
         ],
@@ -40,7 +51,6 @@ module.exports = function(grunt) {
 
     jasmine: {
       build: {
-        src: 'src/js/pebble-js-app.js',
         options: {
           helpers: 'test/js/helpers/*.js',
           specs: 'test/js/specs-bundle.js',
@@ -56,6 +66,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-  grunt.registerTask('default', ['jshint', 'browserify', 'jasmine']);
+  grunt.registerTask('default', ['jshint', 'browserify'/*, 'jasmine'*/]);
 
 };

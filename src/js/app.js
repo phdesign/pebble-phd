@@ -1,5 +1,6 @@
 var utils = require('./utils.js');
 var openWeatherMapApi = require('./open-weather-map.js');
+var bomApi = require('./bom.js');
 
 var weatherApi;
 
@@ -42,7 +43,7 @@ function sendWeather() {
 
 function init() {
   // Determine which weather provider to use
-  weatherApi = openWeatherMapApi;
+  weatherApi = bomApi;
   // Get the initial weather
   sendWeather();
 }

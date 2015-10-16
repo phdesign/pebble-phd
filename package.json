@@ -29,6 +29,8 @@
     "grunt-contrib-uglify": "^0.9.2"
   },
   "dependencies": {
-    "bom-api": "^1.0.4"
+    "bom-api": "^1.0.4",
+    "browser-request": "^0.3.3",
+    "http-browserify": "^1.7.0"
   }
 }
