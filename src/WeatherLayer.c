@@ -41,7 +41,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   }
 
   // Assemble full string and display
-  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s, %s", temperature_buffer, conditions_buffer);
+  snprintf(
+      weather_layer_buffer,
+      sizeof(weather_layer_buffer),
+      (strlen(conditions_buffer) == 0) ? "%s" : "%s, %s",
+      temperature_buffer,
+      conditions_buffer);
   text_layer_set_text(s_weather_layer, weather_layer_buffer);
 }
 

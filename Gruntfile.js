@@ -25,8 +25,7 @@ module.exports = function(grunt) {
     browserify: {
       options: {
         alias: {
-          'http': 'http-browserify',
-          'request': 'browser-request'
+          'request': './src/js/simple-request.js'
         }
       },
       build: {
@@ -66,6 +65,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-  grunt.registerTask('default', ['jshint', 'browserify'/*, 'jasmine'*/]);
+  grunt.registerTask('default', ['jshint', 'browserify', 'jasmine']);
 
 };

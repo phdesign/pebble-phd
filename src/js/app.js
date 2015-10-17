@@ -43,7 +43,7 @@ function sendWeather() {
 
 function init() {
   // Determine which weather provider to use
-  weatherApi = bomApi;
+  weatherApi = openWeatherMapApi;
   // Get the initial weather
   sendWeather();
 }

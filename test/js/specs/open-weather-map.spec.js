@@ -1,5 +1,6 @@
 var utils = require('../../../src/js/utils.js');
 var openWeatherMapApi = require('../../../src/js/open-weather-map.js');
+var openWeatherMapResponse = require('../helpers/open-weather-map.json');
 
 describe("Open Weather Map API", function() {
   var queryUrl;
@@ -7,7 +8,7 @@ describe("Open Weather Map API", function() {
   beforeEach(function() {
     spyOn(utils, 'ajax').and.callFake(function(url, method, fn) {
       queryUrl = url;
-      fn(fixtures.openWeatherMapResponse);
+      fn(JSON.stringify(openWeatherMapResponse));
     });
   });
 

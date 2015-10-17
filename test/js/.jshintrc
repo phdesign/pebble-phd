@@ -18,7 +18,6 @@
     "pending": false,
     "spyOn": false,
     "Pebble": false,
-    "fixtures": false,
     "jasmine": false
   },
 

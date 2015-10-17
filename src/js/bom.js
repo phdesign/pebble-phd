@@ -1,4 +1,3 @@
-var utils = require('./utils.js');
 var bom = require('bom-api');
 
 var readWeatherValues = function(rawData) {
