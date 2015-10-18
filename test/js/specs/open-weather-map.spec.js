@@ -1,30 +1,30 @@
-var utils = require('../../../src/js/utils.js');
+var request = require('request');
 var openWeatherMapApi = require('../../../src/js/open-weather-map.js');
 var openWeatherMapResponse = require('../helpers/open-weather-map.json');
 
-describe("Open Weather Map API", function() {
+describe('Open Weather Map API', function() {
   var queryUrl;
 
   beforeEach(function() {
-    spyOn(utils, 'ajax').and.callFake(function(url, method, fn) {
-      queryUrl = url;
-      fn(JSON.stringify(openWeatherMapResponse));
+    request.and.callFake(function(options, callback) {
+      queryUrl = options.url;
+      callback(null, {}, openWeatherMapResponse);
     });
   });
 
-  it("should return a valid temperature and conditions given a valid request", function(done) {
+  it('should return a valid temperature and conditions given a valid request', function(done) {
 
     var coords = { latitude: 0, longitude: 0 };
 
     openWeatherMapApi.getCurrentConditions(coords, function(values) {
       expect(values.temp).toBe(10);
-      expect(values.conditions).toBe("Clouds");
+      expect(values.conditions).toBe('Clouds');
       done();
     });
 
   });
 
-  it("should pass the closest weather station given a valid set of coordinates", function(done) {
+  it('should pass the closest weather station given a valid set of coordinates', function(done) {
 
     var coords = { latitude: 0, longitude: 0 };
 

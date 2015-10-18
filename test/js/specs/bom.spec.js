@@ -2,7 +2,7 @@ var request = require('request');
 var bomApi = require('../../../src/js/bom.js');
 var bomResponse = require('../helpers/bom.json');
 
-describe("BOM API", function() {
+describe('BOM API', function() {
   var queryUrl;
 
   beforeEach(function() {
@@ -12,19 +12,19 @@ describe("BOM API", function() {
     });
   });
 
-  it("should return a valid temperature and conditions given a valid request", function(done) {
+  it('should return a valid temperature and conditions given a valid request', function(done) {
 
     var coords = { latitude: -38.0829605, longitude: 145.1986868 };
 
     bomApi.getCurrentConditions(coords, function(values) {
       expect(values.temp).toBe(24.3);
-      expect(values.conditions).toBe("");
+      expect(values.conditions).toBe('');
       done();
     });
 
   });
 
-  it("should pass the closest weather station given a valid set of coordinates", function(done) {
+  it('should pass the closest weather station given a valid set of coordinates', function(done) {
 
     var coords = { latitude: -27.4, longitude: 153.1 };
 

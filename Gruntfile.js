@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
 
   var appConfig = {
-    info: grunt.file.readJSON("appinfo.json"),
-    keys: grunt.file.readJSON("keys.json")
+    info: grunt.file.readJSON('appinfo.json'),
+    keys: grunt.file.readJSON('keys.json')
   };
 
   grunt.initConfig({

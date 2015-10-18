@@ -1,4 +1,5 @@
 var utils = require('./utils.js');
+var request = require('request');
 
 var buildRequestUrl = function(lat, lon) {
     return 'http://api.openweathermap.org/data/2.5/weather?lat=' +
@@ -15,21 +16,18 @@ var readWeatherValues = function(rawData) {
 exports.getCurrentConditions = function(coords, done) {
   var url = buildRequestUrl(coords.latitude, coords.longitude);
 
-  utils.ajax(url, 'GET', 
-    function(responseText) {
-      console.log('Received weather data from Open Weather Map');
+  request({ url: url, json: true}, function(err, xhr, data) {
+    console.log('Received weather data from Open Weather Map');
 
-      var json = JSON.parse(responseText);
-      var values = readWeatherValues(json);
-     
-      if (!values || !values.temp || !values.conditions) {
-        console.log('Unable to process weather data, aborting...');
-        return;
-      }
-      console.log('Temperature is ' + values.temp);
-      console.log('Conditions are ' + values.conditions);
+    var values = readWeatherValues(data);
+   
+    if (!values || !values.temp || !values.conditions) {
+      console.log('Unable to process weather data, aborting...');
+      return;
+    }
+    console.log('Temperature is ' + values.temp);
+    console.log('Conditions are ' + values.conditions);
 
-      done(values);
-    }      
-  );
+    done(values);
+  });
 };

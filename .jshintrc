@@ -24,7 +24,7 @@
    */
 
   // Do not allow blocks without { }
-  "curly": true,
+  "curly": false,
 
   // Prohibits the use of immediate function invocations without wrapping them in parentheses
   "immed": true,
@@ -39,5 +39,14 @@
   "undef": "true",
 
   // Spot unused variables
-  "unused": "true"
+  "unused": "true",
+  
+  // Require capitalization of all constructor functions e.g. `new F()`
+  "newcap" : true,
+  
+  // Enforce use of single quotes (') everywhere
+  "quotmark" : "single",
+  
+  // Tolerate use of `== null`
+  "eqnull" : false 
 }

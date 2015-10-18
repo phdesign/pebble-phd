@@ -20,6 +20,7 @@ exports.getCurrentConditions = function(coords, done) {
     } catch (e) {
       console.log('Error processing weather data\n', e);
     }
+
     /*jshint -W041 */
     if (!values || values.temp == null || values.conditions == null) {
       console.log('Unable to process weather data, aborting...');
