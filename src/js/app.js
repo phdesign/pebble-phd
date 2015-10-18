@@ -2,7 +2,8 @@ var utils = require('./utils.js');
 var openWeatherMapApi = require('./open-weather-map.js');
 var bomApi = require('./bom.js');
 
-var weatherApi;
+// Determine which weather provider to use
+var weatherApi = bomApi;
 
 function getCoordinates(fn) {
   navigator.geolocation.getCurrentPosition(
@@ -42,8 +43,6 @@ function sendWeather() {
 }
 
 function init() {
-  // Determine which weather provider to use
-  weatherApi = openWeatherMapApi;
   // Get the initial weather
   sendWeather();
 }
@@ -63,3 +62,9 @@ Pebble.addEventListener('appmessage',
     sendWeather();
   }                     
 );
+
+exports.setProvider = function(val) {
+  weatherApi = (val == 'open-weather-map') ? 
+    openWeatherMapApi : 
+    bomApi;
+};

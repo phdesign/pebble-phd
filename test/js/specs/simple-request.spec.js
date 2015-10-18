@@ -1,4 +1,4 @@
-var request = require('../../../src/js/simple-request.js');
+var request = require('../../../src/js/request.js');
 
 describe("Simple request", function() {
 

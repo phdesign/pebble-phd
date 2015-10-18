@@ -24,6 +24,7 @@ describe("app", function() {
   it("should send weather data given a ready event", function() {
     spyOn(Pebble, 'sendAppMessage');
 
+    app.setProvider('open-weather-map');
     Pebble.events.ready();
 
     expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
@@ -35,6 +36,7 @@ describe("app", function() {
   it("should send weather data given an appmessage event", function() {
     spyOn(Pebble, 'sendAppMessage');
 
+    app.setProvider('open-weather-map');
     Pebble.events.appmessage();
 
     expect(Pebble.sendAppMessage).toHaveBeenCalledWith({

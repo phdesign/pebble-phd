@@ -1,14 +1,14 @@
 var request = require('request');
 var bomApi = require('../../../src/js/bom.js');
-var bomApiResponse = require('../helpers/bom-api.json');
+var bomResponse = require('../helpers/bom.json');
 
 describe("BOM API", function() {
   var queryUrl;
 
   beforeEach(function() {
-    spyOn(request).and.callFake(function(options, done) {
+    request.and.callFake(function(options, callback) {
       queryUrl = options.url;
-      done(bomApiResponse);
+      callback(null, {}, bomResponse);
     });
   });
 
@@ -17,7 +17,7 @@ describe("BOM API", function() {
     var coords = { latitude: -38.0829605, longitude: 145.1986868 };
 
     bomApi.getCurrentConditions(coords, function(values) {
-      expect(values.temp).toBe(14.8);
+      expect(values.temp).toBe(24.3);
       expect(values.conditions).toBe("");
       done();
     });

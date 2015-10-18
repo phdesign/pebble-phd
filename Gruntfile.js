@@ -23,12 +23,13 @@ module.exports = function(grunt) {
     },
 
     browserify: {
-      options: {
-        alias: {
-          'request': './src/js/simple-request.js'
-        }
-      },
       build: {
+        options: {
+          alias: {
+            'request': './src/js/request.js',
+            'request-callback-wrapper': './src/js/request-callback-wrapper.js'
+          }
+        },
         src: [
           'src/js/**/*.js',
           '!src/js/pebble-js-app.js'
@@ -39,10 +40,15 @@ module.exports = function(grunt) {
         options: {
           browserifyOptions: {
             debug: true
+          },
+          alias: {
+            'request': './test/js/helpers/mock-request.js',
+            'request-callback-wrapper': './src/js/request-callback-wrapper.js'
           }
         },
         src: [
           'test/js/specs/*.spec.js',
+          'test/js/specs/*.js'
         ],
         dest: 'test/js/specs-bundle.js'
       }

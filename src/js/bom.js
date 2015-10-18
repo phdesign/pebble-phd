@@ -13,7 +13,6 @@ exports.getCurrentConditions = function(coords, done) {
   
   bom.getBomDataByLatitudeLongitude(coords.latitude, coords.longitude, function(data){
     console.log('Received weather data from BOM');
-    console.log(data);
 
     var values;
     try {
