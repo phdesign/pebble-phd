@@ -11,6 +11,8 @@ var readWeatherValues = function(rawData) {
 
 exports.getCurrentConditions = function(coords, done) {
   
+  console.log('Retrieving weather information from BOM');
+
   bom.getBomDataByLatitudeLongitude(coords.latitude, coords.longitude, function(data){
     console.log('Received weather data from BOM');
 

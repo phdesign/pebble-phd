@@ -3,12 +3,13 @@ var openWeatherMapApi = require('./open-weather-map.js');
 var bomApi = require('./bom.js');
 
 // Determine which weather provider to use
-var weatherApi = bomApi;
+var weatherApi = openWeatherMapApi;
 
-function getCoordinates(fn) {
+function getCoordinates(callback) {
   navigator.geolocation.getCurrentPosition(
     function(pos) { 
-      fn(pos.coords);
+      console.log('Found you. Coordinates ' + pos.coords.latitude + ', ' + pos.coords.longitude);
+      callback(pos.coords);
     },
     function(err) {
       console.log('Error requesting location!\n' + err);
