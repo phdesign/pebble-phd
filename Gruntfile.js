@@ -53,6 +53,16 @@ module.exports = function(grunt) {
         dest: 'test/js/specs-bundle.js'
       }
     },
+    
+    uglify: {
+      options: {
+        screwIE8: true
+      },
+      build: {
+        src: 'src/js/pebble-js-app.js',
+        dest: 'src/js/pebble-js-app.js'
+      }
+    },
 
     jasmine: {
       build: {
@@ -70,7 +80,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['jshint', 'browserify', 'jasmine']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'uglify', 'jasmine']);
 
 };
