@@ -1,9 +1,11 @@
 var extend = require('extend');
 
 function ajax(params) {
+  console.log('Sending ' + params.method + ' request to ' + params.uri);
   var req = new XMLHttpRequest();
   req.onload = function () {
     this.body = this.responseText;
+    console.log(this.responseText.substr(0, 50));
 
     if (params.json) {
       try { this.body = JSON.parse(this.responseText); }

@@ -66,6 +66,7 @@ static void init() {
 
 static void deinit() {
   window_destroy(s_main_window);
+  weather_deinit();
 }
 
 int main(void) {

@@ -105,3 +105,7 @@ void weather_init() {
   // Open AppMessage
   app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
 }
+
+void weather_deinit() {
+  app_message_deregister_callbacks();
+}

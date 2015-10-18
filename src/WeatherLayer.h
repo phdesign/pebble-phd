@@ -12,5 +12,6 @@ void weather_update(struct tm *tick_time);
 void weather_window_load(Window *window);
 void weather_window_unload(Window *window);
 void weather_init();
+void weather_deinit();
 
 #endif
