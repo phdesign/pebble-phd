@@ -40,7 +40,7 @@ module.exports = function(grunt) {
       build: {
         options: {
           alias: {
-            'request': 'browser-request',
+            'request': './src/js/request.js',
             'request-callback-wrapper': './src/js/request-callback-wrapper.js'
           }
         },

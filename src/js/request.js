@@ -1,21 +1,41 @@
 var extend = require('extend');
 
-function ajax(params) {
-  console.log('Sending ' + params.method + ' request to ' + params.uri);
+function ajax(options) {
+  console.log('Sending ' + options.method + ' request to ' + options.uri);
   var req = new XMLHttpRequest();
   req.onload = function () {
     this.body = this.responseText;
     console.log(this.responseText.substr(0, 50));
 
-    if (params.json) {
+    if (options.json) {
       try { this.body = JSON.parse(this.responseText); }
-      catch (e) { return params.callback(e, this); }
+      catch (e) { return options.callback(e, this); }
     }
 
-    params.callback(null, this, this.body);
+    options.callback(null, this, this.body);
   };
-  req.open(params.method, params.uri);
+  req.open(options.method, options.uri);
   req.send();
+}
+
+function appendQueryString(options) {
+  var serialize = function(obj) {
+    var str = [];
+    for(var p in obj)
+      if (obj.hasOwnProperty(p)) {
+        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+      }
+    return str.join('&');
+  };
+  
+  if(options.qs){
+    var qs = (typeof options.qs == 'string')? options.qs : serialize(options.qs);
+    if(options.uri.indexOf('?') !== -1){ //no get params
+        options.uri = options.uri+'&'+qs;
+    }else{ //existing get params
+        options.uri = options.uri+'?'+qs;
+    }
+  }
 }
 
 function initParams(uri, options, callback) {
@@ -32,10 +52,13 @@ function initParams(uri, options, callback) {
     extend(params, uri);
   }
 
+  // Swap url -> uri if used
   if (!params.uri && params.url) {
     params.uri = params.url;
     delete params.url;
   }
+
+  appendQueryString(params);
 
   params.callback = callback;
   return params;

@@ -27,6 +27,7 @@ exports.getCurrentConditions = function(coords, done) {
 
   request(options, function(err, xhr, data) {
     console.log('Received weather data from Yahoo Weather');
+    console.log('Trancated data:', JSON.stringify(data).substr(0, 255));
 
     var values = readWeatherValues(data);
    
