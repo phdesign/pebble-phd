@@ -1,8 +1,8 @@
 var request = require('request');
-var api = require('../../../src/js/open-weather-map.js');
-var sampleResponse = require('../helpers/open-weather-map.json');
+var api = require('../../../src/js/yahoo-weather.js');
+var sampleResponse = require('../helpers/yahoo-weather.json');
 
-describe('Open Weather Map API', function() {
+describe('Yahoo Weather API', function() {
 
   beforeEach(function() {
     request.and.callFake(function(options, callback) {
@@ -15,8 +15,8 @@ describe('Open Weather Map API', function() {
     var coords = { latitude: 0, longitude: 0 };
 
     api.getCurrentConditions(coords, function(values) {
-      expect(values.temp).toBe(10);
-      expect(values.conditions).toBe('Clouds');
+      expect(values.temp).toBe(16);
+      expect(values.conditions).toBe('Mostly Cloudy');
       done();
     });
 

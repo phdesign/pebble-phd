@@ -1,9 +1,10 @@
 var utils = require('./utils.js');
 var openWeatherMapApi = require('./open-weather-map.js');
 var bomApi = require('./bom.js');
+var yahooApi = require('./yahoo-weather.js');
 
 // Determine which weather provider to use
-var weatherApi = openWeatherMapApi;
+var weatherApi = yahooApi;
 
 function getCoordinates(callback) {
   navigator.geolocation.getCurrentPosition(

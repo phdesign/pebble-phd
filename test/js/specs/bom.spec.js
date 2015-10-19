@@ -1,6 +1,6 @@
 var request = require('request');
-var bomApi = require('../../../src/js/bom.js');
-var bomResponse = require('../helpers/bom.json');
+var api = require('../../../src/js/bom.js');
+var sampleResponse = require('../helpers/bom.json');
 
 describe('BOM API', function() {
   var queryUrl;
@@ -8,7 +8,7 @@ describe('BOM API', function() {
   beforeEach(function() {
     request.and.callFake(function(options, callback) {
       queryUrl = options.url;
-      callback(null, {}, bomResponse);
+      callback(null, {}, sampleResponse);
     });
   });
 
@@ -16,7 +16,7 @@ describe('BOM API', function() {
 
     var coords = { latitude: -38.0829605, longitude: 145.1986868 };
 
-    bomApi.getCurrentConditions(coords, function(values) {
+    api.getCurrentConditions(coords, function(values) {
       expect(values.temp).toBe(24.3);
       expect(values.conditions).toBe('');
       done();
@@ -28,8 +28,20 @@ describe('BOM API', function() {
 
     var coords = { latitude: -27.4, longitude: 153.1 };
 
-    bomApi.getCurrentConditions(coords, function() {
+    api.getCurrentConditions(coords, function() {
       expect(queryUrl).toBe('http://www.bom.gov.au/fwo/IDQ60801/IDQ60801.94578.json');
+      done();
+    });
+
+  });
+
+  it('should pass the closest weather station given a valid set of coordinates - melbourne', function(done) {
+
+    var coords = { latitude: -37.817177071239264, longitude: 144.95854035597037 };
+
+    // This is currently Portland Harbour. Should be Melbourne (Olympic Park)
+    api.getCurrentConditions(coords, function() {
+      expect(queryUrl).toBe('http://www.bom.gov.au/fwo/IDV60801/IDV60801.95826.json');
       done();
     });
 
