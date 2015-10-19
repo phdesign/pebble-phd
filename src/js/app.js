@@ -7,6 +7,7 @@ var yahooApi = require('./yahoo-weather.js');
 var weatherApi = yahooApi;
 
 function getCoordinates(callback) {
+  //callback({ latitude: -37.123, longitude: 144.123 });
   navigator.geolocation.getCurrentPosition(
     function(pos) { 
       console.log('Found you. Coordinates ' + pos.coords.latitude + ', ' + pos.coords.longitude);

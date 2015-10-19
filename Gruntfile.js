@@ -26,7 +26,7 @@ module.exports = function(grunt) {
       build: {
         options: {
           alias: {
-            'request': './src/js/request.js',
+            'request': 'browser-request',
             'request-callback-wrapper': './src/js/request-callback-wrapper.js'
           }
         },
@@ -64,6 +64,18 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      main: {
+        src: 'src/*',
+        dest: '.tmp/',
+        options: {
+          process: function (content, path) {
+            return grunt.template.process(content);
+          }
+        }
+      },
+    },
+
     jasmine: {
       build: {
         options: {
@@ -81,7 +93,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['jshint', 'browserify', 'uglify', 'jasmine']);
+  grunt.registerTask('default', ['jshint', 'browserify', /*'uglify',*/ 'jasmine']);
 
 };

@@ -39,9 +39,9 @@ describe('BOM API', function() {
 
     var coords = { latitude: -37.817177071239264, longitude: 144.95854035597037 };
 
-    // This is currently Portland Harbour. Should be Melbourne (Olympic Park)
+    // Melbourne Latrobe St should be replaced with Melbourne (Olympic Park)
     api.getCurrentConditions(coords, function() {
-      expect(queryUrl).toBe('http://www.bom.gov.au/fwo/IDV60801/IDV60801.95826.json');
+      expect(queryUrl).toBe('http://www.bom.gov.au/fwo/IDV60801/IDV60801.95936.json');
       done();
     });
 
