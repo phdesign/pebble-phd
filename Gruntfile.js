@@ -9,11 +9,25 @@ module.exports = function(grunt) {
 
     config: appConfig,
 
+    copy: {
+      main: {
+        options: {
+          process: function (content, path) {
+            return grunt.template.process(content);
+          }
+        },
+        files: {
+          'src/appinfo.h': ['src/appinfo.tmpl.h']
+        }
+      },
+    },
+
     jshint: {
       files: [
         'Gruntfile.js', 
         'src/js/**/*.js',
         '!src/js/pebble-js-app.js',
+        '!src/js/*.tmpl.js',
         'test/js/specs/**/*.js',
         'test/js/helpers/**/*.js'
       ],
@@ -32,7 +46,8 @@ module.exports = function(grunt) {
         },
         src: [
           'src/js/**/*.js',
-          '!src/js/pebble-js-app.js'
+          '!src/js/pebble-js-app.js',
+          '!src/js/*.tmpl.js'
         ],
         dest: 'src/js/pebble-js-app.js'
       },
@@ -64,18 +79,6 @@ module.exports = function(grunt) {
       }
     },
 
-    copy: {
-      main: {
-        src: 'src/*',
-        dest: '.tmp/',
-        options: {
-          process: function (content, path) {
-            return grunt.template.process(content);
-          }
-        }
-      },
-    },
-
     jasmine: {
       build: {
         options: {
@@ -95,6 +98,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['jshint', 'browserify', /*'uglify',*/ 'jasmine']);
+  grunt.registerTask('default', ['copy', 'jshint', 'browserify', /*'uglify',*/ 'jasmine']);
 
 };

@@ -67,7 +67,14 @@ Pebble.addEventListener('appmessage',
 );
 
 exports.setProvider = function(val) {
-  weatherApi = (val == 'open-weather-map') ? 
-    openWeatherMapApi : 
-    bomApi;
+  switch (val) {
+    case 'open-weather-map': 
+      weatherApi = openWeatherMapApi;
+      break;
+    case 'yahoo-weather':
+      weatherApi = yahooApi;
+      break;
+    default:
+      weatherApi = bomApi;
+  }
 };

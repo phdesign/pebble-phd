@@ -3,6 +3,7 @@
  *******************************/
 
 #include "PHD.h"
+#include "appinfo.h"
 #include "DateLayer.h"
 
 static TextLayer *s_date_layer;

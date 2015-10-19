@@ -1,9 +1,10 @@
 var utils = require('./utils.js');
 var request = require('request');
+var keys = require('../../keys.json');
 
 var buildRequestUrl = function(lat, lon) {
     return 'http://api.openweathermap.org/data/2.5/weather?lat=' +
-        lat + '&lon=' + lon + '&APPID=15664341af304192147d1fb3f38a1f67';
+        lat + '&lon=' + lon + '&APPID=' + keys.openWeatherMapAppId;
 };
 
 var readWeatherValues = function(rawData) {

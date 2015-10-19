@@ -9,7 +9,8 @@ var buildRequestOptions = function(lat, lon) {
       q: 'select * from weather.forecast where woeid in (select woeid from geo.placefinder(1) where text="' + lat + ',' + lon + '" and gflags="R")',
       format: 'json'
     },
-    json: true
+    json: true,
+    verbose: true
   };
 };
 

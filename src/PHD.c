@@ -3,6 +3,7 @@
  *******************************/
 
 #include "PHD.h"
+#include "appinfo.h"
 #include "TimeLayer.h"
 #include "DateLayer.h"
 #include "WeatherLayer.h"

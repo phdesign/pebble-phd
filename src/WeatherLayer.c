@@ -3,6 +3,7 @@
  *******************************/
 
 #include "PHD.h"
+#include "appinfo.h"
 #include "WeatherLayer.h"
 
 static TextLayer *s_weather_layer;

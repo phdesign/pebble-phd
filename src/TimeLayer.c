@@ -3,6 +3,7 @@
  *******************************/
 
 #include "PHD.h"
+#include "appinfo.h"
 #include "TimeLayer.h"
 
 static TextLayer *s_time_layer;
