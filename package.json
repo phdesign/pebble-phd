@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "bom-api": "git+https://github.com/phdesign/bom-api.git#fix-missing-site",
-    "browser-request": "git+https://github.com/phdesign/browser-request.git#undefined-document",
     "extend": "^3.0.0"
   }
 }
