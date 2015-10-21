@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PHD Configuration Page</title>
+  <link rel='stylesheet' type='text/css' href='/bower_components/Slate/dist/css/slate.min.css'>
+  <link rel='stylesheet' type='text/css' href='/css/style.css'>
+</head>
+<body>
+  <div class='item-container'>
+    <h1 class='title'>PHD<br>Configuration Page</h1>
+  </div>
+
+  <div class='item-container'>
+    <div class='item-container-header'>Weather</div>
+    <div class='item-container-content'>
+      <label class='item'>
+        Show weather?
+        <input id='field-show-weather' type='checkbox' class='item-toggle'>
+      </label>
+      <label class="item disabled">
+        Select weather service
+        <select id="field-weather-service" dir='rtl' class="item-select" disabled>
+          <option class="item-select-option" value="yahoo-weather" selected>Yahoo! Weather</option>
+          <option class="item-select-option" value="open-weather-map">Open Weather Map</option>
+          <option class="item-select-option" value="bom">Australian Bureau of Meteorology*</option>
+        </select>
+      </label>
+    </div>
+    <div class='item-container-footer'>
+      * Australian Bureau of Meteorology displays temperature only, not conditions.<br/>
+      Weather information is updated once every 30min.
+    </div>
+  </div>
+
+  <div class='item-container'>
+    <div class='button-container'>
+      <input id='btn-submit' type='button' class='item-button' value='SUBMIT'>
+    </div>
+  </div>
+
+  <script src='/bower_components/Slate/dist/js/slate.min.js'></script>
+  <script src='/js/main.js'></script>
+</body>
+</html>

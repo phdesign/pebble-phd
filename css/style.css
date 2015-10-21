@@ -1,0 +1,15 @@
+.title {
+  padding: 0 10px;
+  text-transform: uppercase;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #888888;
+  text-align: center;
+}
+.disabled {
+  color: #a8a8a8;
+}
+.disabled .select-triangle {
+  border-top-color: #a8a8a8;
+}
