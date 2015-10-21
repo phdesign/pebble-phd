@@ -22,6 +22,7 @@ var readWeatherValues = function(rawData) {
   };
 };
 
+exports.key = 'yahoo-weather';
 exports.name = 'Yahoo! Weather';
 exports.getCurrentConditions = function(coords, done) {
   var options = buildRequestOptions(coords.latitude, coords.longitude);

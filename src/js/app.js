@@ -3,8 +3,9 @@ var openWeatherMapApi = require('./open-weather-map.js');
 var bomApi = require('./bom.js');
 var yahooApi = require('./yahoo-weather.js');
 
+var config;
 // Determine which weather provider to use
-var weatherApi = yahooApi;
+var activeWeatherService = yahooApi;
 
 function getCoordinates(callback) {
   //callback({ latitude: -37.123, longitude: 144.123 });
@@ -21,11 +22,11 @@ function getCoordinates(callback) {
 }
 
 function sendWeather() {
-  if (!weatherApi)
+  if (!activeWeatherService)
     { console.error('Weather api provider has not been selected'); }
 
   getCoordinates(function(coords) {
-    weatherApi.getCurrentConditions(coords, function(values) {
+    activeWeatherService.getCurrentConditions(coords, function(values) {
         // Assemble dictionary using our keys
         var dictionary = {
           'KEY_TEMPERATURE': values.temp,
@@ -45,20 +46,35 @@ function sendWeather() {
   }); 
 }
 
-function setWeatherService(val) {
-  switch (val) {
+function setWeatherService(serviceKey) {
+  if (serviceKey === activeWeatherService.key)
+    return;
+
+  switch (serviceKey) {
     case 'open-weather-map': 
-      weatherApi = openWeatherMapApi;
+      activeWeatherService = openWeatherMapApi;
       break;
     case 'bom':
-      weatherApi = bomApi;
+      activeWeatherService = bomApi;
       break;
     default:
-      weatherApi = yahooApi;
+      activeWeatherService = yahooApi;
   }
 }
 
+function loadConfig() {
+ try {
+    if (localStorage.config) {
+      config = JSON.parse(localStorage.config);
+      setWeatherService(config.weatherService);
+      console.log('Config loaded, using ' + activeWeatherService.name + ' service');
+    }
+  } catch (e) { } 
+}
+
 function init() {
+  // Load config data
+  loadConfig();
   // Get the initial weather
   sendWeather();
 }
@@ -88,24 +104,25 @@ Pebble.addEventListener('showConfiguration', function() {
 });
 
 Pebble.addEventListener('webviewclosed', function(e) {
-  var configData;
   try {
-    configData = JSON.parse(decodeURIComponent(e.response));
-    console.log('Configuration page returned: ' + JSON.stringify(configData));
+    config = JSON.parse(decodeURIComponent(e.response));
+    localStorage.config = JSON.stringify(config);
+    console.log('Configuration page returned: ' + localStorage.config);
   } catch (err) {
     console.warn('Invalid config data returned', e.response, err);
   }
 
   var dictionary = {};
-  if (configData.weatherService) {
-    setWeatherService(configData.weatherService);
-    dictionary['KEY_WEATHER_SERVICE'] = weatherApi.name;
+  if (config.weatherService) {
+    setWeatherService(config.weatherService);
+    sendWeather();
+    dictionary['KEY_WEATHER_SERVICE'] = activeWeatherService.name;
   }
-  if (configData.showWeather) {
-    dictionary['KEY_SHOW_WEATHER'] = !!configData.showWeather;
+  if (config.showWeather) {
+    dictionary['KEY_SHOW_WEATHER'] = !!config.showWeather;
   }
 
-  if (configData.showWeather || configData.weatherService) {
+  if (config.showWeather || config.weatherService) {
     Pebble.sendAppMessage(dictionary, function() {
       console.log('Send successful!');
     }, function() {

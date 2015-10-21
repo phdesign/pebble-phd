@@ -14,6 +14,7 @@ var readWeatherValues = function(rawData) {
   };
 };
 
+exports.key = 'open-weather-map';
 exports.name = 'Open Weather Map';
 exports.getCurrentConditions = function(coords, done) {
   var url = buildRequestUrl(coords.latitude, coords.longitude);

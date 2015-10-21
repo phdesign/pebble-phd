@@ -53,9 +53,7 @@ function getAndStoreConfigData() {
     weatherService: $weatherService.val()
   };
 
-  var configString = JSON.stringify(config);
-  localStorage.pebbleConfig = configString;
-  console.log('Got options: ' + configString);
+  localStorage.pebbleConfig = JSON.stringify(config);
   return config;
 }
 

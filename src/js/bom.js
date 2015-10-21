@@ -9,6 +9,7 @@ var readWeatherValues = function(rawData) {
   };
 };
 
+exports.key = 'bom';
 exports.name = 'Australian Bureau of Meteorology';
 exports.getCurrentConditions = function(coords, done) {
   
