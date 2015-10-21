@@ -78,6 +78,13 @@ module.exports = function(grunt) {
           keepRunner: true
         }
       }
+    },
+    
+    'gh-pages': {
+      options: {
+        base: 'config'
+      },
+      src: ['**/*']
     }
 
   });
@@ -86,7 +93,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   grunt.registerTask('default', ['copy', 'jshint', 'browserify', 'jasmine']);
+  grunt.registerTask('deploy', ['gh-pages']);
 
 };

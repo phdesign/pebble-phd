@@ -96,7 +96,7 @@ Pebble.addEventListener('appmessage',
 );
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://localhost:8080';
+  var url = 'http://phdesign.com.au/pebble-phd';
 
   console.log('Showing configuration page: ' + url);
 
