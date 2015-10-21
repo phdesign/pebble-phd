@@ -45,6 +45,19 @@ function sendWeather() {
   }); 
 }
 
+function setWeatherService(val) {
+  switch (val) {
+    case 'open-weather-map': 
+      weatherApi = openWeatherMapApi;
+      break;
+    case 'bom':
+      weatherApi = bomApi;
+      break;
+    default:
+      weatherApi = yahooApi;
+  }
+}
+
 function init() {
   // Get the initial weather
   sendWeather();
@@ -75,15 +88,25 @@ Pebble.addEventListener('showConfiguration', function() {
 });
 
 Pebble.addEventListener('webviewclosed', function(e) {
-  var configData = JSON.parse(decodeURIComponent(e.response));
+  var configData;
+  try {
+    configData = JSON.parse(decodeURIComponent(e.response));
+    console.log('Configuration page returned: ' + JSON.stringify(configData));
+  } catch (err) {
+    console.warn('Invalid config data returned', e.response, err);
+  }
 
-  console.log('Configuration page returned: ' + JSON.stringify(configData));
+  var dictionary = {};
+  if (configData.weatherService) {
+    setWeatherService(configData.weatherService);
+    dictionary['KEY_WEATHER_SERVICE'] = weatherApi.name;
+  }
+  if (configData.showWeather) {
+    dictionary['KEY_SHOW_WEATHER'] = !!configData.showWeather;
+  }
 
-  if (configData.backgroundColor) {
-    Pebble.sendAppMessage({
-      backgroundColor: parseInt(configData.backgroundColor, 16),
-      twentyFourHourFormat: configData.twentyFourHourFormat
-    }, function() {
+  if (configData.showWeather || configData.weatherService) {
+    Pebble.sendAppMessage(dictionary, function() {
       console.log('Send successful!');
     }, function() {
       console.log('Send failed!');
@@ -91,15 +114,4 @@ Pebble.addEventListener('webviewclosed', function(e) {
   }
 });
 
-exports.setProvider = function(val) {
-  switch (val) {
-    case 'open-weather-map': 
-      weatherApi = openWeatherMapApi;
-      break;
-    case 'yahoo-weather':
-      weatherApi = yahooApi;
-      break;
-    default:
-      weatherApi = bomApi;
-  }
-};
+exports.setWeatherService = setWeatherService;

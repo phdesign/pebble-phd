@@ -8,7 +8,7 @@ describe('app', function() {
   describe('open-weather-map', function() {
 
     beforeEach(function() {
-      app.setProvider('open-weather-map');
+      app.setWeatherService('open-weather-map');
 
       request.and.callFake(function(options, callback) {
         callback(null, {}, openWeatherMapResponse);
@@ -53,7 +53,7 @@ describe('app', function() {
   describe('bom', function() {
 
     beforeEach(function() {
-      app.setProvider('bom');
+      app.setWeatherService('bom');
 
       request.and.callFake(function(options, callback) {
         callback(null, {}, bomResponse);

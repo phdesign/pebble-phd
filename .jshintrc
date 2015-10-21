@@ -48,5 +48,8 @@
   "quotmark" : "single",
   
   // Tolerate use of `== null`
-  "eqnull" : false 
+  "eqnull" : false,
+
+  // Supress dot notation warnings (e.g. allow obj['prop'])
+  "sub" : true
 }
