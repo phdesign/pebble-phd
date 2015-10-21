@@ -5,11 +5,17 @@
   "companyName": "phdesign",
   "versionLabel": "1.1",
   "sdkVersion": "3",
-  "targetPlatforms": ["aplite", "basalt"],
+  "targetPlatforms": [
+    "aplite", 
+    "basalt"
+  ],
   "watchapp": {
     "watchface": true
   },
-  "capabilities": ["location"],
+  "capabilities": [
+    "location", 
+    "configurable"
+  ],
   "appKeys": {
     "KEY_TEMPERATURE": 0,
     "KEY_CONDITIONS": 1

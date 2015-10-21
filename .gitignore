@@ -3,6 +3,7 @@ build
 generated
 others
 node_modules
+bower_components
 keys.json
 src/js/pebble-js-app.js
 .grunt

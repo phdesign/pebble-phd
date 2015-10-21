@@ -66,6 +66,31 @@ Pebble.addEventListener('appmessage',
   }                     
 );
 
+Pebble.addEventListener('showConfiguration', function() {
+  var url = 'http://localhost:8080';
+
+  console.log('Showing configuration page: ' + url);
+
+  Pebble.openURL(url);
+});
+
+Pebble.addEventListener('webviewclosed', function(e) {
+  var configData = JSON.parse(decodeURIComponent(e.response));
+
+  console.log('Configuration page returned: ' + JSON.stringify(configData));
+
+  if (configData.backgroundColor) {
+    Pebble.sendAppMessage({
+      backgroundColor: parseInt(configData.backgroundColor, 16),
+      twentyFourHourFormat: configData.twentyFourHourFormat
+    }, function() {
+      console.log('Send successful!');
+    }, function() {
+      console.log('Send failed!');
+    });
+  }
+});
+
 exports.setProvider = function(val) {
   switch (val) {
     case 'open-weather-map': 
