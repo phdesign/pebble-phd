@@ -1,6 +1,6 @@
 var request = require('request');
 var api = require('../../../src/js/bom.js');
-var sampleResponse = require('../helpers/bom.json');
+var sampleResponse = require('../fixtures/bom.json');
 
 describe('BOM API', function() {
   var queryUrl;

@@ -5,7 +5,7 @@ var yahooApi = require('./yahoo-weather.js');
 
 module.exports = {
 
-  activeService: yahooApi,
+  activeService: null,
 
   sendWeather: function() {
     var self = this;
@@ -36,7 +36,7 @@ module.exports = {
 
   // Return true if the weather service was changed, false if it's the same value
   setWeatherService: function(serviceKey) {
-    if (serviceKey === this.activeService.key)
+    if (this.activeService && serviceKey === this.activeService.key)
       return false;
 
     switch (serviceKey) {
@@ -46,8 +46,11 @@ module.exports = {
       case 'bom':
         this.activeService = bomApi;
         break;
-      default:
+      case 'yahoo-weather': 
         this.activeService = yahooApi;
+        break;
+      default:
+        console.warn('Unrecognised weather service key \'' + serviceKey + '\'');
     }
 
     return true;

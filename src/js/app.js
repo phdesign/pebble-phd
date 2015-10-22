@@ -3,6 +3,7 @@ var config = require('./config.js');
 
 function init() {
   config.loadConfig();
+  weather.setWeatherService(config.settings.weatherService);
   // Get the initial weather
   weather.sendWeather();
 }

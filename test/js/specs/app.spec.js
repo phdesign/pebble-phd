@@ -1,8 +1,8 @@
 var request = require('request');
 var app = require('../../../src/js/app.js');
-var weather = require('../../../src/js/weather.js');
-var openWeatherMapResponse = require('../helpers/open-weather-map.json');
-var bomResponse = require('../helpers/bom.json');
+var config = require('../../../src/js/config.js');
+var openWeatherMapResponse = require('../fixtures/open-weather-map.json');
+var bomResponse = require('../fixtures/bom.json');
 
 describe('app', function() {
 
@@ -16,7 +16,7 @@ describe('app', function() {
   describe('open-weather-map', function() {
 
     beforeEach(function() {
-      weather.setWeatherService('open-weather-map');
+      config.settings.weatherService = 'open-weather-map';
 
       request.and.callFake(function(options, callback) {
         callback(null, {}, openWeatherMapResponse);
@@ -54,7 +54,7 @@ describe('app', function() {
   describe('bom', function() {
 
     beforeEach(function() {
-      weather.setWeatherService('bom');
+      config.settings.weatherService = 'bom';
 
       request.and.callFake(function(options, callback) {
         callback(null, {}, bomResponse);

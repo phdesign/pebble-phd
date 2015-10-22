@@ -1,22 +1,26 @@
 var extend = require('extend');
 var weather = require('./weather.js');
 
-var config = {};
-
 module.exports = {
+
+  settings: {
+    configVersion: 1,
+    showWeather: true,
+    weatherService: 'yahoo-weather'
+  },
 
   loadConfig: function() {
     try {
       if (localStorage.config) {
-        config = JSON.parse(localStorage.config);
-        weather.setWeatherService(config.weatherService);
+        this.settings = JSON.parse(localStorage.config);
+        weather.setWeatherService(this.settings.weatherService);
         console.log('Config loaded, using ' + weather.activeService.name + ' service');
       }
     } catch (e) { } 
   },
 
   saveConfig: function() {
-    localStorage.config = JSON.stringify(config);
+    localStorage.config = JSON.stringify(this.settings);
   },
 
   openConfigPage: function() {
@@ -38,20 +42,20 @@ module.exports = {
     if (!newConfig) return false;
 
     // Copy received config properties onto our exisitng config
-    extend(config, newConfig);
+    extend(this.settings, newConfig);
     this.saveConfig();
 
     var dictionary = {};
-    if (config.weatherService) {
-      if (weather.setWeatherService(config.weatherService))
+    if (this.settings.weatherService) {
+      if (weather.setWeatherService(this.settings.weatherService))
         weather.sendWeather();
       dictionary['KEY_WEATHER_SERVICE'] = weather.activeService.name;
     }
-    if (config.showWeather) {
-      dictionary['KEY_SHOW_WEATHER'] = !!config.showWeather;
+    if (this.settings.showWeather) {
+      dictionary['KEY_SHOW_WEATHER'] = !!this.settings.showWeather;
     }
 
-    if (config.showWeather || config.weatherService) {
+    if (this.settings.showWeather || this.settings.weatherService) {
       Pebble.sendAppMessage(dictionary, function() {
         console.log('Send successful!');
       }, function() {

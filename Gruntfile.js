@@ -57,13 +57,12 @@ module.exports = function(grunt) {
             debug: true
           },
           alias: {
-            'request': './test/js/helpers/mock-request.js',
+            'request': './test/js/mocks/request.js',
             'request-callback-wrapper': './src/js/request-callback-wrapper.js'
           }
         },
         src: [
-          'test/js/specs/*.spec.js',
-          'test/js/specs/*.js'
+          'test/js/specs/*.spec.js'
         ],
         dest: 'test/js/specs-bundle.js'
       }
@@ -72,7 +71,10 @@ module.exports = function(grunt) {
     jasmine: {
       build: {
         options: {
-          helpers: 'test/js/helpers/*.js',
+          helpers: [
+            'test/js/mocks/pebble.js',
+            'test/js/mocks/navigator.js'
+          ],
           specs: 'test/js/specs-bundle.js',
           outfile: 'test/js/_SpecRunner.html',
           keepRunner: true
