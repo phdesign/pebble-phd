@@ -1,3 +1,4 @@
+var utils = require('./utils.js');
 var extend = require('extend');
 var weather = require('./weather.js');
 
@@ -51,17 +52,16 @@ module.exports = {
     extend(this.settings, newConfig);
     this.saveConfig();
 
-    var dictionary = {};
     if (this.settings.weatherService) {
       if (weather.setWeatherService(this.settings.weatherService))
         weather.sendWeather();
-      dictionary['KEY_WEATHER_SERVICE'] = weather.activeService.name;
     }
+
+    var dictionary = {};
     if (this.settings.showWeather) {
       dictionary['KEY_SHOW_WEATHER'] = !!this.settings.showWeather;
     }
-
-    if (this.settings.showWeather || this.settings.weatherService) {
+    if (utils.hasOwnProperties(dictionary)) {
       Pebble.sendAppMessage(dictionary, function() {
         console.log('Send successful!');
       }, function() {

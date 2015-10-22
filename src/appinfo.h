@@ -7,8 +7,7 @@
 
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
-#define KEY_WEATHER_SERVICE 2
-#define KEY_SHOW_WEATHER 3
+#define KEY_SHOW_WEATHER 2
 
 
 #endif
