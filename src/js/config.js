@@ -9,7 +9,7 @@ module.exports = {
     weatherService: 'yahoo-weather'
   },
 
-  runningInEmulator: function() {
+  isRunningInEmulator: function() {
     return Pebble.getActiveWatchInfo && /^qemu/.test(Pebble.getActiveWatchInfo().model);
   },
 
@@ -30,7 +30,7 @@ module.exports = {
   openConfigPage: function() {
     // Send current config to the config page. Why do the tutorials recommend saving config on the config page? 
     // That's dumb, the app should be the source of truth for current configuration.
-    var url = this.runningInEmulator() ? 'http://localhost:8080' : 'http://phdesign.com.au/pebble-phd';
+    var url = this.isRunningInEmulator() ? 'http://localhost:8080' : 'http://phdesign.com.au/pebble-phd';
     url += '?cfg=' + encodeURIComponent(JSON.stringify(this.settings));
     console.log('Showing configuration page: ' + url);
     Pebble.openURL(url);

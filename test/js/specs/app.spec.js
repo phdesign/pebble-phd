@@ -4,13 +4,45 @@ var config = require('../../../src/js/config.js');
 var openWeatherMapResponse = require('../fixtures/open-weather-map.json');
 var bomResponse = require('../fixtures/bom.json');
 
-describe('app', function() {
+describe('App', function() {
 
   it('should be defined', function() {
     expect(app).toBeDefined();
 
     expect(Pebble.events.ready).toBeDefined();
     expect(Pebble.events.appmessage).toBeDefined();
+  });
+
+  it('should send current config to the localhost config page when running in emulator given a showConfiguration event', function() {
+    var origSettings = config.settings;
+    config.settings = { thingOne: true, thingTwo: 'apple' };
+    
+    spyOn(Pebble, 'getActiveWatchInfo').and.returnValue({
+      model: 'qemu_platform_basalt'
+    });
+    spyOn(Pebble, 'openURL');
+
+    Pebble.events.showConfiguration();
+
+    expect(Pebble.openURL).toHaveBeenCalledWith('http://localhost:8080?cfg=%7B%22thingOne%22%3Atrue%2C%22thingTwo%22%3A%22apple%22%7D');
+
+    config.settings = origSettings;
+  });
+
+  it('should send current config to the prod config page when running on phone given a showConfiguration event', function() {
+    var origSettings = config.settings;
+    config.settings = { thingOne: true, thingTwo: 'apple' };
+    
+    spyOn(Pebble, 'getActiveWatchInfo').and.returnValue({
+      model: 'platform_basalt'
+    });
+    spyOn(Pebble, 'openURL');
+
+    Pebble.events.showConfiguration();
+
+    expect(Pebble.openURL).toHaveBeenCalledWith('http://phdesign.com.au/pebble-phd?cfg=%7B%22thingOne%22%3Atrue%2C%22thingTwo%22%3A%22apple%22%7D');
+
+    config.settings = origSettings;
   });
 
   describe('open-weather-map', function() {
