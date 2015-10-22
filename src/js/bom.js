@@ -9,31 +9,36 @@ var readWeatherValues = function(rawData) {
   };
 };
 
-exports.key = 'bom';
-exports.name = 'Australian Bureau of Meteorology';
-exports.getCurrentConditions = function(coords, done) {
-  
-  console.log('Retrieving weather information from BOM');
+module.exports = {
 
-  bom.getBomDataByLatitudeLongitude(coords.latitude, coords.longitude, function(data){
-    console.log('Received weather data from BOM');
+  key: 'bom',
+  name: 'Australian Bureau of Meteorology',
 
-    var values;
-    try {
-      values = readWeatherValues(data);
-    } catch (e) {
-      console.log('Error processing weather data\n', e);
-    }
+  getCurrentConditions: function(coords, done) {
+    
+    console.log('Retrieving weather information from BOM');
 
-    /*jshint -W041 */
-    if (!values || values.temp == null || values.conditions == null) {
-      console.log('Unable to process weather data, aborting...');
-      return;
-    }
-    console.log('Temperature is ' + values.temp);
-    console.log('Conditions are ' + values.conditions);
+    bom.getBomDataByLatitudeLongitude(coords.latitude, coords.longitude, function(data){
+      console.log('Received weather data from BOM');
 
-    done(values);
-  });
+      var values;
+      try {
+        values = readWeatherValues(data);
+      } catch (e) {
+        console.log('Error processing weather data\n', e);
+      }
+
+      /*jshint -W041 */
+      if (!values || values.temp == null || values.conditions == null) {
+        console.log('Unable to process weather data, aborting...');
+        return;
+      }
+      console.log('Temperature is ' + values.temp);
+      console.log('Conditions are ' + values.conditions);
+
+      done(values);
+    });
+
+  }
 
 };

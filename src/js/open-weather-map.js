@@ -14,23 +14,28 @@ var readWeatherValues = function(rawData) {
   };
 };
 
-exports.key = 'open-weather-map';
-exports.name = 'Open Weather Map';
-exports.getCurrentConditions = function(coords, done) {
-  var url = buildRequestUrl(coords.latitude, coords.longitude);
+module.exports = {
 
-  request({ url: url, json: true}, function(err, xhr, data) {
-    console.log('Received weather data from Open Weather Map');
+  key: 'open-weather-map',
+  name: 'Open Weather Map',
 
-    var values = readWeatherValues(data);
-   
-    if (!values || !values.temp || !values.conditions) {
-      console.log('Unable to process weather data, aborting...');
-      return;
-    }
-    console.log('Temperature is ' + values.temp);
-    console.log('Conditions are ' + values.conditions);
+  getCurrentConditions: function(coords, done) {
+    var url = buildRequestUrl(coords.latitude, coords.longitude);
 
-    done(values);
-  });
+    request({ url: url, json: true}, function(err, xhr, data) {
+      console.log('Received weather data from Open Weather Map');
+
+      var values = readWeatherValues(data);
+     
+      if (!values || !values.temp || !values.conditions) {
+        console.log('Unable to process weather data, aborting...');
+        return;
+      }
+      console.log('Temperature is ' + values.temp);
+      console.log('Conditions are ' + values.conditions);
+
+      done(values);
+    });
+  }
+
 };

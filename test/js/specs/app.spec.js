@@ -1,14 +1,22 @@
 var request = require('request');
 var app = require('../../../src/js/app.js');
+var weather = require('../../../src/js/weather.js');
 var openWeatherMapResponse = require('../helpers/open-weather-map.json');
 var bomResponse = require('../helpers/bom.json');
 
 describe('app', function() {
 
+  it('should be defined', function() {
+    expect(app).toBeDefined();
+
+    expect(Pebble.events.ready).toBeDefined();
+    expect(Pebble.events.appmessage).toBeDefined();
+  });
+
   describe('open-weather-map', function() {
 
     beforeEach(function() {
-      app.setWeatherService('open-weather-map');
+      weather.setWeatherService('open-weather-map');
 
       request.and.callFake(function(options, callback) {
         callback(null, {}, openWeatherMapResponse);
@@ -17,13 +25,6 @@ describe('app', function() {
       spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(function(success, error, options) {
         success({ coords: { latitude: 0, longitude: 0 } });
       });
-    });
-
-    it('should be defined', function() {
-      expect(app).toBeDefined();
-
-      expect(Pebble.events.ready).toBeDefined();
-      expect(Pebble.events.appmessage).toBeDefined();
     });
 
     it('should send weather data given a ready event', function() {
@@ -53,7 +54,7 @@ describe('app', function() {
   describe('bom', function() {
 
     beforeEach(function() {
-      app.setWeatherService('bom');
+      weather.setWeatherService('bom');
 
       request.and.callFake(function(options, callback) {
         callback(null, {}, bomResponse);
@@ -62,13 +63,6 @@ describe('app', function() {
       spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(function(success, error, options) {
         success({ coords: { latitude: 0, longitude: 0 } });
       });
-    });
-
-    it('should be defined', function() {
-      expect(app).toBeDefined();
-
-      expect(Pebble.events.ready).toBeDefined();
-      expect(Pebble.events.appmessage).toBeDefined();
     });
 
     it('should send weather data given a ready event', function() {

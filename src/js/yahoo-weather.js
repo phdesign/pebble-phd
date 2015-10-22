@@ -22,24 +22,29 @@ var readWeatherValues = function(rawData) {
   };
 };
 
-exports.key = 'yahoo-weather';
-exports.name = 'Yahoo! Weather';
-exports.getCurrentConditions = function(coords, done) {
-  var options = buildRequestOptions(coords.latitude, coords.longitude);
+module.exports = {
 
-  request(options, function(err, xhr, data) {
-    console.log('Received weather data from Yahoo Weather');
-    console.log('First 255 bytes:', JSON.stringify(data).substr(0, 255));
+  key: 'yahoo-weather',
+  name: 'Yahoo! Weather',
 
-    var values = readWeatherValues(data);
-   
-    if (!values || !values.temp || !values.conditions) {
-      console.log('Unable to process weather data, aborting...');
-      return;
-    }
-    console.log('Temperature is ' + values.temp);
-    console.log('Conditions are ' + values.conditions);
+  getCurrentConditions: function(coords, done) {
+    var options = buildRequestOptions(coords.latitude, coords.longitude);
 
-    done(values);
-  });
+    request(options, function(err, xhr, data) {
+      console.log('Received weather data from Yahoo Weather');
+      console.log('First 255 bytes:', JSON.stringify(data).substr(0, 255));
+
+      var values = readWeatherValues(data);
+     
+      if (!values || !values.temp || !values.conditions) {
+        console.log('Unable to process weather data, aborting...');
+        return;
+      }
+      console.log('Temperature is ' + values.temp);
+      console.log('Conditions are ' + values.conditions);
+
+      done(values);
+    });
+  }
+
 };
