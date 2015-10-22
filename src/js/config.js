@@ -25,7 +25,10 @@ module.exports = {
 
   openConfigPage: function() {
     // TODO: switch between localhost and prod config page if running emulator or phone 
-    var url = 'http://phdesign.com.au/pebble-phd';
+    // Send current config to the config page. Why do the tutorials recommend saving config on the config page? 
+    // That's dumb, the app should be the source of truth for current configuration.
+    //var url = 'http://phdesign.com.au/pebble-phd?cfg=' + encodeURIComponent(JSON.stringify(this.settings));
+    var url = 'http://localhost:8080?cfg=' + encodeURIComponent(JSON.stringify(this.settings));
     console.log('Showing configuration page: ' + url);
     Pebble.openURL(url);
   },

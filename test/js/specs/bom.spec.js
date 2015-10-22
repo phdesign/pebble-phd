@@ -1,5 +1,5 @@
 var request = require('request');
-var api = require('../../../src/js/bom.js');
+var api = require('../../../src/js/weather-services/bom.js');
 var sampleResponse = require('../fixtures/bom.json');
 
 describe('BOM API', function() {

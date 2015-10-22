@@ -1,4 +1,4 @@
-var utils = require('./utils.js');
+var utils = require('../utils.js');
 var request = require('request');
 
 var buildRequestOptions = function(lat, lon) {

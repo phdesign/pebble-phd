@@ -1,7 +1,9 @@
 var gps = require('./gps.js');
-var openWeatherMapApi = require('./open-weather-map.js');
-var bomApi = require('./bom.js');
-var yahooApi = require('./yahoo-weather.js');
+var services = [
+  require('./weather-services/open-weather-map.js'),
+  require('./weather-services/bom.js'),
+  require('./weather-services/yahoo-weather.js')
+];
 
 module.exports = {
 
@@ -39,18 +41,15 @@ module.exports = {
     if (this.activeService && serviceKey === this.activeService.key)
       return false;
 
-    switch (serviceKey) {
-      case 'open-weather-map': 
-        this.activeService = openWeatherMapApi;
+    for (var i = 0; i < services.length; i++) {
+      if (services[i].key === serviceKey) {
+        this.activeService = services[i];
         break;
-      case 'bom':
-        this.activeService = bomApi;
-        break;
-      case 'yahoo-weather': 
-        this.activeService = yahooApi;
-        break;
-      default:
+      }
+    }
+    if (i == services.length) {
         console.warn('Unrecognised weather service key \'' + serviceKey + '\'');
+        return false;
     }
 
     return true;

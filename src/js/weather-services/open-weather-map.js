@@ -1,6 +1,6 @@
-var utils = require('./utils.js');
+var utils = require('../utils.js');
 var request = require('request');
-var keys = require('../../keys.json');
+var keys = require('../../../keys.json');
 
 var buildRequestUrl = function(lat, lon) {
     return 'http://api.openweathermap.org/data/2.5/weather?lat=' +

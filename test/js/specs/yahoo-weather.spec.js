@@ -1,5 +1,5 @@
 var request = require('request');
-var api = require('../../../src/js/yahoo-weather.js');
+var api = require('../../../src/js/weather-services/yahoo-weather.js');
 var sampleResponse = require('../fixtures/yahoo-weather.json');
 
 describe('Yahoo Weather API', function() {

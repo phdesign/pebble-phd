@@ -1,5 +1,5 @@
 var request = require('request');
-var api = require('../../../src/js/open-weather-map.js');
+var api = require('../../../src/js/weather-services/open-weather-map.js');
 var sampleResponse = require('../fixtures/open-weather-map.json');
 
 describe('Open Weather Map API', function() {
