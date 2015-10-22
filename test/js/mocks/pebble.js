@@ -1,8 +1,11 @@
 /*jshint -W079 */
 var Pebble = {
-    events: {}
+
+    events: {},
+    getActiveWatchInfo: function() {},
+    addEventListener: function(evt, fn) {
+        this.events[evt] = fn;
+    },
+    sendAppMessage: function() {}
+
 };
-Pebble.addEventListener = function(evt, fn) {
-    Pebble.events[evt] = fn;
-};
-Pebble.sendAppMessage = function() {};

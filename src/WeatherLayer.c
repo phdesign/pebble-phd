@@ -9,11 +9,23 @@
 static TextLayer *s_weather_layer;
 static bool s_loaded = false;
 
+static void update_weather_text(char *temperature, char *conditions) {
+  static char weather_layer_buffer[32];
+
+  // Assemble full string and display
+  snprintf(
+      weather_layer_buffer,
+      sizeof(weather_layer_buffer),
+      (strlen(conditions) == 0) ? "%s" : "%s, %s",
+      temperature,
+      conditions);
+  text_layer_set_text(s_weather_layer, weather_layer_buffer);
+}
+
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
-  static char temperature_buffer[8];
-  static char conditions_buffer[32];
-  static char weather_layer_buffer[32];
+  char temperature_buffer[8];
+  char conditions_buffer[32];
 
   // We'll be sent a message when the js first loads
   if (!s_loaded)
@@ -41,14 +53,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     t = dict_read_next(iterator);
   }
 
-  // Assemble full string and display
-  snprintf(
-      weather_layer_buffer,
-      sizeof(weather_layer_buffer),
-      (strlen(conditions_buffer) == 0) ? "%s" : "%s, %s",
-      temperature_buffer,
-      conditions_buffer);
-  text_layer_set_text(s_weather_layer, weather_layer_buffer);
+  update_weather_text(temperature_buffer, conditions_buffer);
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
