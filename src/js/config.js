@@ -53,6 +53,7 @@ module.exports = {
     this.saveConfig();
 
     if (this.settings.weatherService) {
+      // If weather service was changed, send updated weather to the watch
       if (weather.setWeatherService(this.settings.weatherService))
         weather.sendWeather();
     }
