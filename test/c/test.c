@@ -4,9 +4,9 @@
 
 static void print_date(time_t datetime) {
   struct tm *temp_time = localtime(&datetime);
-  char str_time[40];
+  char str_time[50];
 
-  strftime(str_time, 40, "The current time is %a %e %b %H:%M\n", temp_time);
+  strftime(str_time, sizeof(str_time), "The current time is %a %e %b %Y %H:%M\n", temp_time);
   printf("%s", str_time);
 }
 
@@ -21,13 +21,14 @@ int main(void) {
   time_t now = time(NULL);
   print_date(now);
 
-  //time_t s_last_updated = mktime((struct tm) {
-    //.tm_year = 2015,
-    //.tm_mon = 10,
-    //.tm_mday = 15,
-    //.tm_hour = 10,
-    //.tm_min = 0
-  //});
+  time_t s_last_updated = mktime(&(struct tm) {
+    .tm_year = 2015 - 1900,
+    .tm_mon = 10 - 1,
+    .tm_mday = 15,
+    .tm_hour = 10,
+    .tm_min = 0
+  });
+  print_date(s_last_updated);
 
   return 0;
 }
