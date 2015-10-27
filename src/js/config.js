@@ -37,6 +37,17 @@ module.exports = {
     Pebble.openURL(url);
   },
 
+  sendConfig: function() {
+    var dictionary = {
+      'KEY_SHOW_WEATHER': !!this.settings.showWeather
+    };
+    Pebble.sendAppMessage(dictionary, function() {
+      console.log('Send successful!');
+    }, function() {
+      console.log('Send failed!');
+    });
+  },
+
   receiveConfig: function(configString) {
     var newConfig;
 
@@ -52,23 +63,11 @@ module.exports = {
     extend(this.settings, newConfig);
     this.saveConfig();
 
-    if (this.settings.weatherService) {
-      // If weather service was changed, send updated weather to the watch
-      if (weather.setWeatherService(this.settings.weatherService))
-        weather.sendWeather();
-    }
+    // If weather service was changed, send updated weather to the watch
+    if (weather.setWeatherService(this.settings.weatherService))
+      weather.sendWeather();
 
-    var dictionary = {};
-    if (this.settings.showWeather) {
-      dictionary['KEY_SHOW_WEATHER'] = !!this.settings.showWeather;
-    }
-    if (utils.hasOwnProperties(dictionary)) {
-      Pebble.sendAppMessage(dictionary, function() {
-        console.log('Send successful!');
-      }, function() {
-        console.log('Send failed!');
-      });
-    }
+    this.sendConfig();
   },
 
 };

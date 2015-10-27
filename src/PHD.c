@@ -66,9 +66,9 @@ static void init() {
 }
 
 static void deinit() {
+  weather_deinit();
   window_destroy(s_main_window);
   tick_timer_service_unsubscribe();
-  weather_deinit();
 }
 
 int main(void) {

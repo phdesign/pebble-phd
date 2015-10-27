@@ -9,6 +9,16 @@ describe('Utils', function() {
       expect(utils.hasOwnProperties(obj)).toBe(true);
     });
 
+    it('should return true given an object with a false property', function() {
+      var obj = { thingOne: false };
+      expect(utils.hasOwnProperties(obj)).toBe(true);
+    });
+
+    it('should return true given an object with a null property', function() {
+      var obj = { thingOne: null };
+      expect(utils.hasOwnProperties(obj)).toBe(true);
+    });
+
     it('should return false given an object with no properties', function() {
       var obj = {};
       expect(utils.hasOwnProperties(obj)).toBe(false);

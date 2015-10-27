@@ -17,7 +17,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'src/appinfo.h': ['src/appinfo.tmpl.h']
+          'src/appinfo.h': ['src/appinfo.tpl.h']
         }
       },
     },
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         'Gruntfile.js', 
         'src/js/**/*.js',
         '!src/js/pebble-js-app.js',
-        '!src/js/*.tmpl.js',
+        '!src/js/*.tpl.js',
         'test/js/specs/**/*.js',
         'test/js/helpers/**/*.js'
       ],
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         src: [
           'src/js/**/*.js',
           '!src/js/pebble-js-app.js',
-          '!src/js/*.tmpl.js'
+          '!src/js/*.tpl.js'
         ],
         dest: 'src/js/pebble-js-app.js'
       },
