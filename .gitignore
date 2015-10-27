@@ -9,3 +9,4 @@ src/js/pebble-js-app.js
 .grunt
 _SpecRunner.html
 test/js/specs-bundle.js
+test/c/test
