@@ -2,9 +2,9 @@
  * Weather Layer
  *******************************/
 
-#include "PHD.h"
+#include "main.h"
 #include "appinfo.h"
-#include "WeatherLayer.h"
+#include "weather-layer.h"
 
 static TextLayer *s_weather_layer;
 

@@ -2,9 +2,9 @@
  * Time Layer
  *******************************/
 
-#include "PHD.h"
+#include "main.h"
 #include "appinfo.h"
-#include "TimeLayer.h"
+#include "time-layer.h"
 
 static TextLayer *s_time_layer;
 

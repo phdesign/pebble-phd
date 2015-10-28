@@ -2,11 +2,11 @@
  * PHD Watchface
  *******************************/
 
-#include "PHD.h"
+#include "main.h"
 #include "appinfo.h"
-#include "TimeLayer.h"
-#include "DateLayer.h"
-#include "WeatherLayer.h"
+#include "time-layer.h"
+#include "date-layer.h"
+#include "weather-layer.h"
 
 static Window *s_main_window;
 

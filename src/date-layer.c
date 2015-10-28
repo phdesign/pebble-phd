@@ -2,9 +2,9 @@
  * Date Layer
  *******************************/
 
-#include "PHD.h"
+#include "main.h"
 #include "appinfo.h"
-#include "DateLayer.h"
+#include "date-layer.h"
 
 static TextLayer *s_date_layer;
 
