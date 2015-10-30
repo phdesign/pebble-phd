@@ -118,7 +118,7 @@ void weather_window_load(Window *window) {
 
   // This gets called by weather_init and here because we don't know which will return first.
   // We check to see if s_weather_layer has been initialised before trying to set any value.
-  if (config()->is_loaded)
+  if (config_is_loaded())
     load_last_weather();
 }
 
