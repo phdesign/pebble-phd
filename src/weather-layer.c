@@ -92,7 +92,9 @@ void weather_update(struct tm *tick_time) {
     return;
 
   // Get weather update at a regular interval
-  if(tick_time->tm_min % WEATHER_UPDATE_MINS == 0) {
+  time_t now = time(NULL);
+  if (difftime(now, config()->weather_last_updated) > WEATHER_UPDATE_SECS) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather");
     // Begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);

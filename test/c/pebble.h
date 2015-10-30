@@ -1,5 +1,4 @@
-#ifndef PEBBLE_H
-#define PEBBLE_H
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -87,5 +86,3 @@ void layer_add_child(Layer * parent, Layer * child );
 // =================
 
 void mock_clock_is_24h_style(bool (*mock_callback)());
-
-#endif

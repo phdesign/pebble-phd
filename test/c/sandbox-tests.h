@@ -1,6 +1,3 @@
-#ifndef SANDBOX_TESTS_H
-#define SANDBOX_TESTS_H
+#pragma once
 
 void sandbox_test_fixture(void);
-
-#endif

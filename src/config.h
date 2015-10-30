@@ -1,5 +1,4 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include <pebble.h>
 
@@ -16,5 +15,3 @@ void config_init(void);
 void config_deinit(void);
 Config* config();
 bool config_is_loaded(void);
-
-#endif

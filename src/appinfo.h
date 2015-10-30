@@ -1,5 +1,4 @@
-#ifndef APPINFO_H
-#define APPINFO_H
+#pragma once
 
 #define LONG_NAME "PHD"
 #define VERSION_LABEL "1.1"
@@ -12,5 +11,3 @@
 #define KEY_CONDITIONS 1
 #define KEY_SHOW_WEATHER 2
 
-
-#endif
