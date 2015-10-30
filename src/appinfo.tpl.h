@@ -5,6 +5,8 @@
 #define VERSION_LABEL "<%= config.info.versionLabel %>"
 #define UUID "<%= config.info.uuid %>"
 
+#define PERSIST_CONFIG 0
+
 <% for (prop in config.info.appKeys) { 
   %>#define <%= prop %> <%= config.info.appKeys[prop] %>
 <% } %>

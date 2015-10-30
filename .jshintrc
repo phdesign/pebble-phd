@@ -1,5 +1,6 @@
 /*
  * Example jshint configuration file for Pebble development.
+ * Adapted from http://developer.getpebble.com/blog/2014/01/12/Using-JSHint-For-Pebble-Development/#installing-jshint
  *
  * Check out the full documentation at http://www.jshint.com/docs/options/
  */
