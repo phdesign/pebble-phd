@@ -5,6 +5,7 @@
 #include "main.h"
 #include "appinfo.h"
 #include "config.h"
+#include "utils.h"
 #include "weather-layer.h"
 
 static TextLayer *s_weather_layer = NULL;
@@ -42,6 +43,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     switch(t->key) {
       case KEY_TEMPERATURE:
         config()->weather_temp = (int)t->value->int32;
+        config()->weather_last_updated = time(NULL);
+
         break;
       case KEY_CONDITIONS:
         snprintf(config()->weather_conditions, sizeof(config()->weather_conditions), "%s", t->value->cstring);
@@ -93,8 +96,8 @@ void weather_update(struct tm *tick_time) {
 
   // Get weather update at a regular interval
   time_t now = time(NULL);
-  if (difftime(now, config()->weather_last_updated) > WEATHER_UPDATE_SECS) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather");
+  if (difftime(now, config()->weather_last_updated) >= WEATHER_UPDATE_MINS * 60) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather, last update %s", format_date_time(config()->weather_last_updated));
     // Begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
@@ -119,7 +122,6 @@ void weather_window_load(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
 
   // This gets called by weather_init and here because we don't know which will return first.
-  // We check to see if s_weather_layer has been initialised before trying to set any value.
   if (config_is_loaded())
     load_last_weather();
 }
@@ -129,6 +131,7 @@ void weather_window_unload(Window *window) {
 }
 
 void weather_init() {
+  // Check if weather_window_load has been called yet
   if (s_weather_layer != NULL)
     load_last_weather();
 
