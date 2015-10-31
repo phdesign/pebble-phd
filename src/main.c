@@ -4,6 +4,7 @@
 
 #include "main.h"
 #include "appinfo.h"
+#include "config.h"
 #include "time-layer.h"
 #include "date-layer.h"
 #include "weather-layer.h"
@@ -46,6 +47,9 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void init() {
+  config_init();
+  weather_init();
+
   s_main_window = window_create();
 
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -61,14 +65,14 @@ static void init() {
   struct tm *tick_time = localtime(&temp);
   time_update(tick_time);
   date_update(tick_time);
-
-  weather_init();
 }
 
 static void deinit() {
-  weather_deinit();
   window_destroy(s_main_window);
   tick_timer_service_unsubscribe();
+
+  weather_deinit();
+  config_deinit();
 }
 
 int main(void) {

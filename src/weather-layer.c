@@ -80,12 +80,12 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 static void load_last_weather() {
   // Check if last weather update is less than expiry
   time_t now = time(NULL);
-  if (difftime(now, config()->weather_last_updated) < WEATHER_EXPIRY_SECS) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Last update is fresh enough, using it");
+  if (difftime(now, config()->weather_last_updated) < WEATHER_EXPIRY_MINS * 60) {
     update_weather_text(config()->weather_temp, config()->weather_conditions);
   }
 }
 
+// TODO: Is this necessary to hide the weather or can we just remove s_weather_layer?
 void clear_weather_text() {
     text_layer_set_text(s_weather_layer, "");
 }
@@ -97,7 +97,7 @@ void weather_update(struct tm *tick_time) {
   // Get weather update at a regular interval
   time_t now = time(NULL);
   if (difftime(now, config()->weather_last_updated) >= WEATHER_UPDATE_MINS * 60) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather, last update %s", format_date_time(config()->weather_last_updated));
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather, last update was %s", format_date_time(config()->weather_last_updated));
     // Begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
@@ -111,7 +111,6 @@ void weather_update(struct tm *tick_time) {
 }
 
 void weather_window_load(Window *window) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "weather_window_load");
   // Create temperature Layer
   s_weather_layer = text_layer_create(GRect(0, 0, 144, 20));
   text_layer_set_background_color(s_weather_layer, GColorClear);
@@ -121,9 +120,7 @@ void weather_window_load(Window *window) {
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
 
-  // This gets called by weather_init and here because we don't know which will return first.
-  if (config_is_loaded())
-    load_last_weather();
+  load_last_weather();
 }
 
 void weather_window_unload(Window *window) {
@@ -131,10 +128,6 @@ void weather_window_unload(Window *window) {
 }
 
 void weather_init() {
-  // Check if weather_window_load has been called yet
-  if (s_weather_layer != NULL)
-    load_last_weather();
-
   // Register callbacks
   app_message_register_inbox_received(inbox_received_callback);
   app_message_register_inbox_dropped(inbox_dropped_callback);
