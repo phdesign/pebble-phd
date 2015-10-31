@@ -52,6 +52,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       case KEY_SHOW_WEATHER:
         config()->weather_enabled = t->value->int32 > 0;
         APP_LOG(APP_LOG_LEVEL_DEBUG, "s_weather_enabled %s", config()->weather_enabled ? "true" : "false");
+        layer_set_hidden(text_layer_get_layer(s_weather_layer), !config()->weather_enabled);
         break;
       default:
         APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -83,11 +84,6 @@ static void load_last_weather() {
   if (difftime(now, config()->weather_last_updated) < WEATHER_EXPIRY_MINS * 60) {
     update_weather_text(config()->weather_temp, config()->weather_conditions);
   }
-}
-
-// TODO: Is this necessary to hide the weather or can we just remove s_weather_layer?
-void clear_weather_text() {
-    text_layer_set_text(s_weather_layer, "");
 }
 
 void weather_update(struct tm *tick_time) {
