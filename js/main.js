@@ -29,7 +29,7 @@ function submitHandler() {
     console.log('Submit');
 
     var return_to = getQueryParam('return_to', 'pebblejs://close#');
-    document.location = return_to + encodeURIComponent(JSON.stringify(getAndStoreConfigData()));
+    document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
   });
 }
 
@@ -37,9 +37,9 @@ function loadConfigData() {
   var config;
 
   try {
-    if (localStorage.pebbleConfig)
-      config = JSON.parse(localStorage.pebbleConfig);
+    config = JSON.parse(getQueryParam('cfg', '{}'));
   } catch (e) { }
+  console.log('Received current config as', config);
 
   if (config && config.showWeather)
     $showWeather[0].checked = config.showWeather;
@@ -47,14 +47,11 @@ function loadConfigData() {
     $weatherService.val(config.weatherService);
 }
 
-function getAndStoreConfigData() {
-  var config = {
+function getConfigData() {
+  return {
     showWeather: $showWeather[0].checked,
     weatherService: $weatherService.val()
   };
-
-  localStorage.pebbleConfig = JSON.stringify(config);
-  return config;
 }
 
 function getQueryParam(variable, defaultValue) {
