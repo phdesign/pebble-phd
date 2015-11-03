@@ -6,40 +6,38 @@
 // Wall Time
 // ================
 
-bool (*mocked_clock_is_24h_style)() = NULL;
-
-void mock_clock_is_24h_style(bool (*mock)()) {
-  mocked_clock_is_24h_style = mock;
+bool (*mock_clock_is_24h_style)() = NULL;
+void pebble_mock_clock_is_24h_style(bool (*mock)()) {
+  mock_clock_is_24h_style = mock;
 }
 
 bool clock_is_24h_style(void) {
-  if (mocked_clock_is_24h_style != NULL)
-    return mocked_clock_is_24h_style();
+  if (mock_clock_is_24h_style != NULL)
+    return mock_clock_is_24h_style();
   return false;
 }
 
 // Storage
 // =================
 
-int32_t (*mocked_persist_read_int)(const uint32_t key) = NULL;
-status_t (*mocked_persist_delete)(const uint32_t key) = NULL;
-int (*mocked_persist_read_data)(const uint32_t key, void * buffer, const size_t buffer_size) = NULL;
-
-void mock_persist_read_int(int (*mock)(const uint32_t key)) {
-  mocked_persist_read_int = mock;
+int32_t (*mock_persist_read_int)(const uint32_t key) = NULL;
+void pebble_mock_persist_read_int(int (*mock)(const uint32_t key)) {
+  mock_persist_read_int = mock;
 }
 
-void mock_persist_delete(status_t (*mock)(const uint32_t key)) {
-  mocked_persist_delete = mock;
+status_t (*mock_persist_delete)(const uint32_t key) = NULL;
+void pebble_mock_persist_delete(status_t (*mock)(const uint32_t key)) {
+  mock_persist_delete = mock;
 }
 
-void mock_persist_read_data(int (*mock)(const uint32_t key, void * buffer, const size_t buffer_size)) {
-  mocked_persist_read_data = mock;
+int (*mock_persist_read_data)(const uint32_t key, void * buffer, const size_t buffer_size) = NULL;
+void pebble_mock_persist_read_data(int (*mock)(const uint32_t key, void * buffer, const size_t buffer_size)) {
+  mock_persist_read_data = mock;
 }
 
 status_t persist_delete(const uint32_t key) {
-  if (mocked_persist_delete != NULL)
-    return mocked_persist_delete(key);
+  if (mock_persist_delete != NULL)
+    return mock_persist_delete(key);
   return S_SUCCESS;
 }
 
@@ -56,14 +54,14 @@ bool persist_read_bool(const uint32_t key) {
 }
 
 int persist_read_data(const uint32_t key, void * buffer, const size_t buffer_size) {
-  if (mocked_persist_read_data != NULL)
-    return mocked_persist_read_data(key, buffer, buffer_size);
+  if (mock_persist_read_data != NULL)
+    return mock_persist_read_data(key, buffer, buffer_size);
   return 1;
 }
 
 int32_t persist_read_int(const uint32_t key) {
-  if (mocked_persist_read_int != NULL)
-    return mocked_persist_read_int(key);
+  if (mock_persist_read_int != NULL)
+    return mock_persist_read_int(key);
   return 1;
 }
 

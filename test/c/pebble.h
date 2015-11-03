@@ -54,7 +54,7 @@ enum GTextAlignment {
 bool clock_is_24h_style(void);
 
 // Mocks
-void mock_clock_is_24h_style(bool (*mock)());
+void pebble_mock_clock_is_24h_style(bool (*mock)());
 
 // Layers
 // =================
@@ -122,8 +122,8 @@ int persist_write_string(const uint32_t key, const char * cstring);
 
 // Mocks
 
-void mock_persist_read_int(int32_t (*mock)(const uint32_t key));
-void mock_persist_read_data(int (*mock)(const uint32_t key, void * buffer, const size_t buffer_size));
+void pebble_mock_persist_read_int(int32_t (*mock)(const uint32_t key));
+void pebble_mock_persist_read_data(int (*mock)(const uint32_t key, void * buffer, const size_t buffer_size));
 
 // Logging
 // =================

@@ -28,7 +28,7 @@ static bool mock_clock_is_24h_style_returns_false() {
 //}
 
 static void test_mock() {
-  mock_clock_is_24h_style(mock_clock_is_24h_style_returns_false);
+  pebble_mock_clock_is_24h_style(mock_clock_is_24h_style_returns_false);
   assert_false(clock_is_24h_style());
 }
 
