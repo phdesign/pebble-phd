@@ -1,5 +1,5 @@
 EXE = test
-SRC = $(wildcard *.c) ../../src/config.c
+SRC = $(wildcard *.c) ../../src/config.c ../../src/time-layer.c
 
 # -Wno-parentheses-equality disables a (seemingly unnecessary) warning from seatest.c
 # -I. tells the compiler to look for system / angled includes in the current folder

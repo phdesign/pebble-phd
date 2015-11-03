@@ -10,3 +10,8 @@
 <% for (prop in config.info.appKeys) { 
   %>#define <%= prop %> <%= config.info.appKeys[prop] %>
 <% } %>
+
+<% if (!config.emitLogs) {
+%>#undef APP_LOG
+#define APP_LOG(...)
+<% } %>

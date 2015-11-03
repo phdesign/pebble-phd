@@ -16,6 +16,54 @@ bool clock_is_24h_style(void) {
     return mock_clock_is_24h_style();
   return false;
 }
+// Layers
+// ================
+
+void layer_add_child(Layer * parent, Layer * child ) {
+}
+
+// Text Layer
+// ================
+
+void (*mock_text_layer_set_text)(TextLayer * text_layer, const char * text);
+void pebble_mock_text_layer_set_text(void (*mock)(TextLayer * text_layer, const char * text)) {
+  mock_text_layer_set_text = mock;
+}
+
+TextLayer* text_layer_create(struct GRect frame) {
+  return NULL;
+}
+
+void text_layer_destroy(TextLayer * text_layer) {
+}
+
+Layer* text_layer_get_layer(TextLayer * text_layer) {
+  return NULL;
+}
+
+void text_layer_set_background_color(TextLayer * text_layer, enum GColor color) {
+}
+
+void text_layer_set_font(TextLayer * text_layer, GFont font ) {
+}
+
+void text_layer_set_text(TextLayer * text_layer, const char * text ) {
+  if (mock_text_layer_set_text != NULL)
+    mock_text_layer_set_text(text_layer, text);
+}
+
+void text_layer_set_text_alignment(TextLayer * text_layer, enum GTextAlignment text_alignment ) {
+}
+
+void text_layer_set_text_color(TextLayer * text_layer, enum GColor color ) {
+}
+
+// Window
+// =================
+
+Layer* window_get_root_layer(const Window * window) {
+  return NULL;
+}
 
 // Storage
 // =================
@@ -35,6 +83,11 @@ void pebble_mock_persist_read_data(int (*mock)(const uint32_t key, void * buffer
   mock_persist_read_data = mock;
 }
 
+bool (*mock_persist_exists)(const uint32_t key) = NULL;
+void pebble_mock_persist_exists(bool (*mock)(const uint32_t key)) {
+  mock_persist_exists = mock;
+}
+
 status_t persist_delete(const uint32_t key) {
   if (mock_persist_delete != NULL)
     return mock_persist_delete(key);
@@ -42,6 +95,8 @@ status_t persist_delete(const uint32_t key) {
 }
 
 bool persist_exists(const uint32_t key) {
+  if (mock_persist_exists != NULL)
+    return mock_persist_exists(key);
   return true;
 }
 
@@ -56,7 +111,7 @@ bool persist_read_bool(const uint32_t key) {
 int persist_read_data(const uint32_t key, void * buffer, const size_t buffer_size) {
   if (mock_persist_read_data != NULL)
     return mock_persist_read_data(key, buffer, buffer_size);
-  return 1;
+  return E_DOES_NOT_EXIST;
 }
 
 int32_t persist_read_int(const uint32_t key) {

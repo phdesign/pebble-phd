@@ -15,9 +15,6 @@
 #define GPointZero   struct GPoint(0, 0)
 #define GPoint( x, y )   ((struct GPoint){(x), (y)})
 
-// Typedefs
-typedef void* GFont;
-
 // Structs
 struct GPoint {
   int16_t x;
@@ -47,6 +44,12 @@ enum GTextAlignment {
   GTextAlignmentRight
 };
 
+// Fonts
+// ================
+
+// Typedefs
+typedef void* GFont;
+
 // Wall Time
 // ================
 
@@ -66,8 +69,10 @@ void layer_add_child(Layer * parent, Layer * child );
 // Text Layer
 // ================
 
+// Typedefs
 typedef void* TextLayer;
 
+// Functions
 TextLayer* text_layer_create(struct GRect frame);
 void text_layer_destroy(TextLayer * text_layer);
 Layer* text_layer_get_layer(TextLayer * text_layer);
@@ -77,18 +82,25 @@ void text_layer_set_text(TextLayer * text_layer, const char * text );
 void text_layer_set_text_alignment(TextLayer * text_layer, enum GTextAlignment text_alignment );
 void text_layer_set_text_color(TextLayer * text_layer, enum GColor color );
 
+// Mocks
+void pebble_mock_text_layer_set_text(void (*mock)(TextLayer * text_layer, const char * text));
+
 // Window
 // ================
 
+// Typedefs
 typedef void* Window;
 
+// Functions
 Layer* window_get_root_layer(const Window * window);
 
 // Storage
 // =================
 
+// Typedefs
 typedef int32_t status_t;
 
+// Enums
 enum StatusCode {
   S_SUCCESS,
   E_ERROR,
@@ -99,15 +111,16 @@ enum StatusCode {
   E_OUT_OF_STORAGE,
   E_OUT_OF_RESOURCES,
   E_RANGE,
-  E_DOES_NOT_EXIST0,
-  E_INVALID_OPERATION1,
-  E_BUSY2,
-  S_TRUE3,
-  S_FALSE4,
-  S_NO_MORE_ITEMS5,
-  S_NO_ACTION_REQUIRED6
+  E_DOES_NOT_EXIST,
+  E_INVALID_OPERATION,
+  E_BUSY,
+  S_TRUE,
+  S_FALSE,
+  S_NO_MORE_ITEMS,
+  S_NO_ACTION_REQUIRED
 };
 
+// Functions
 status_t persist_delete(const uint32_t key);
 bool persist_exists(const uint32_t key);
 int persist_get_size(const uint32_t key);
@@ -121,15 +134,17 @@ status_t persist_write_int(const uint32_t key, const int32_t value);
 int persist_write_string(const uint32_t key, const char * cstring);
 
 // Mocks
-
 void pebble_mock_persist_read_int(int32_t (*mock)(const uint32_t key));
 void pebble_mock_persist_read_data(int (*mock)(const uint32_t key, void * buffer, const size_t buffer_size));
+void pebble_mock_persist_exists(bool (*mock)(const uint32_t key));
 
 // Logging
 // =================
 
+// Macros
 #define APP_LOG(level, fmt, args...) app_log(level, __FILE__, __LINE__, fmt, ## args)
 
+// Enums
 enum AppLogLevel {
   APP_LOG_LEVEL_ERROR,
   APP_LOG_LEVEL_WARNING,
@@ -138,4 +153,5 @@ enum AppLogLevel {
   APP_LOG_LEVEL_DEBUG_VERBOSE
 };
 
+// Functions
 void app_log(uint8_t log_level, const char * src_filename, int src_line_number, const char * fmt, ...);

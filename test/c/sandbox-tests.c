@@ -5,19 +5,26 @@
 #include "seatest.h"
 
 static void test_i_can_create_a_custom_time() {
+  char str_time[50];
   time_t custom_time = mktime(&(struct tm) {
     .tm_year = 2015 - 1900,
     .tm_mon = 10 - 1,
     .tm_mday = 15,
-    .tm_hour = 10 - 1,
+    .tm_hour = 22 - 1,
     .tm_min = 0
   });
-
   struct tm *temp_time = localtime(&custom_time);
-  char str_time[50];
-  strftime(str_time, sizeof(str_time), "%a %e %b %Y %H:%M", temp_time);
-  
-  assert_string_equal("Thu 15 Oct 2015 10:00", str_time);
+
+  strftime(str_time, sizeof(str_time), "%a %e %b %Y %I:%M%p", temp_time);
+  assert_string_equal("Thu 15 Oct 2015 10:00PM", str_time);
+
+  // TODO: print hex, what non-displaying char am I missing here?
+  //snprintf(str_time, sizeof(str_time), "%s\n", asctime(temp_time));
+  //assert_string_equal("Thu Oct 15 22:00:00 2015", str_time);
+  //char *s = &str_time;
+  //while(*s)
+    //printf("%02x", (unsigned int) *s++);
+  //printf("\n");
 }
 
 static void test_size_of_time_t_same_as_long() {
