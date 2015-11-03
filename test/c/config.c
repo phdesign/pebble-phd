@@ -2,7 +2,6 @@
  * Config
  *******************************/
 
-#include "main.h"
 #include "appinfo.h"
 #include "config.h"
 

@@ -47,6 +47,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void init() {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Watchface started");
   config_init();
   weather_init();
 

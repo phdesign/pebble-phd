@@ -1,6 +1,6 @@
 #include <pebble.h>
 #include "seatest.h"
-#include "time-layer.h"
+//#include "time-layer.h"
 
 static bool mock_clock_is_24h_style_returns_false() {
   return false;
