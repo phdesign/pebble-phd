@@ -14,15 +14,15 @@ static int mock_persist_read_data(const uint32_t key, void * buffer, const size_
   if (key == PERSIST_KEY_CONFIG) {
     *(Config*)(buffer) = (Config) {
       .weather_conditions = "Windy",
-        .weather_temp = 14,
-        .weather_last_updated = mktime(&(struct tm) {
-            .tm_year = 2015 - 1900,
-            .tm_mon = 10 - 1,
-            .tm_mday = 15,
-            .tm_hour = 10 - 1,
-            .tm_min = 0
-            }),
-        .weather_enabled = true
+      .weather_temp = 14,
+      .weather_last_updated = mktime(&(struct tm) {
+          .tm_year = 2015 - 1900,
+          .tm_mon = 10 - 1,
+          .tm_mday = 15,
+          .tm_hour = 10 - 1,
+          .tm_min = 0
+          }),
+      .weather_enabled = true
     };
     return sizeof(Config);
   }
@@ -75,6 +75,11 @@ static void test_should_return_defaults_given_no_saved_data() {
 static void test_setup() {
   pebble_mock_persist_read_data(mock_persist_read_data);
   pebble_mock_persist_read_int(mock_persist_read_int);
+
+  // Reset config
+  *(config()) = (Config){
+    .weather_enabled = true
+  };
 }
 
 static void test_teardown() {
@@ -89,10 +94,10 @@ void config_test_fixture(void) {
 
   // Tests must be in correct order because each test is NOT atomic, if the test changes
   // data in the target then it changes it for all tests
-  run_test(test_should_return_defaults_given_no_saved_data);
   run_test(test_should_return_defaults_given_unrecognised_storage_version);
   run_test(test_should_return_defaults_given_current_storage_version_but_no_saved_data);
   run_test(test_should_return_stored_config_given_current_storage_version);
+  run_test(test_should_return_defaults_given_no_saved_data);
 
   test_fixture_end();
 }

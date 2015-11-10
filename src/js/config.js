@@ -15,13 +15,14 @@ module.exports = {
   },
 
   loadConfig: function() {
-    try {
-      if (localStorage.config) {
+    if (localStorage.config) {
+      try {
         this.settings = JSON.parse(localStorage.config);
-        weather.setWeatherService(this.settings.weatherService);
-        console.log('Config loaded, using ' + weather.activeService.name + ' service');
-      }
-    } catch (e) { } 
+      } catch (e) { } 
+    }
+
+    weather.setWeatherService(this.settings.weatherService);
+    console.log('Config loaded, using ' + weather.activeService.name + ' service');
   },
 
   saveConfig: function() {

@@ -23,9 +23,9 @@ static void update_weather_text(int temperature, char *conditions) {
   snprintf(
       weather_info,
       sizeof(weather_info),
-      (strlen(conditions) == 0) ? "%dC" : "%dC, %s",
+      "%dC, %s",
       temperature,
-      conditions);
+      strlen(conditions) == 0 ? "" : conditions);
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Update weather %s", weather_info);
   text_layer_set_text(s_weather_layer, weather_info);
@@ -44,6 +44,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // Which key was received?
     switch(t->key) {
       case KEY_TEMPERATURE:
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Received temp %d", (int)t->value->int32);
         config()->weather_temp = (int)t->value->int32;
         config()->weather_last_updated = time(NULL);
         s_update_retry_count = 0;

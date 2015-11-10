@@ -1,7 +1,33 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
 #include "pebble.h"
+
+// Dictionary
+// ===============
+
+Tuple * (*mock_dict_read_first)(DictionaryIterator *iter) = NULL;
+void pebble_mock_dict_read_first(Tuple * (*mock)(DictionaryIterator *iter)) {
+  mock_dict_read_first = mock;
+}
+
+Tuple * (*mock_dict_read_next)(DictionaryIterator *iter) = NULL;
+void pebble_mock_dict_read_next(Tuple * (*mock)(DictionaryIterator *iter)) {
+  mock_dict_read_next = mock;
+}
+
+DictionaryResult dict_write_uint8(DictionaryIterator *iter, const uint32_t key, const uint8_t value) {
+  return DICT_OK;
+}
+
+Tuple * dict_read_first(DictionaryIterator *iter) { 
+  if (mock_dict_read_first != NULL)
+    return mock_dict_read_first(iter);
+  return NULL; 
+}
+
+Tuple * dict_read_next(DictionaryIterator *iter) {
+  if (mock_dict_read_next != NULL)
+    return mock_dict_read_next(iter);
+  return NULL; 
+}
 
 // Wall Time
 // ================
@@ -16,53 +42,94 @@ bool clock_is_24h_style(void) {
     return mock_clock_is_24h_style();
   return false;
 }
+
 // Layers
 // ================
 
-void layer_add_child(Layer * parent, Layer * child ) {
-}
+void layer_add_child(Layer * parent, Layer * child ) { }
+void layer_set_hidden(Layer *layer, bool hidden) { }
 
 // Text Layer
 // ================
 
-void (*mock_text_layer_set_text)(TextLayer * text_layer, const char * text);
+void (*mock_text_layer_set_text)(TextLayer * text_layer, const char * text) = NULL;
 void pebble_mock_text_layer_set_text(void (*mock)(TextLayer * text_layer, const char * text)) {
   mock_text_layer_set_text = mock;
 }
 
-TextLayer* text_layer_create(struct GRect frame) {
-  return NULL;
+TextLayer* (*mock_text_layer_create)(struct GRect frame) = NULL;
+void pebble_mock_text_layer_create(TextLayer* (*mock)(struct GRect frame)) {
+  mock_text_layer_create = mock;
 }
 
-void text_layer_destroy(TextLayer * text_layer) {
+TextLayer* text_layer_create(struct GRect frame) { 
+  if (mock_text_layer_create != NULL)
+    return mock_text_layer_create(frame);
+  return NULL; 
 }
 
-Layer* text_layer_get_layer(TextLayer * text_layer) {
-  return NULL;
-}
+void text_layer_destroy(TextLayer * text_layer) { }
 
-void text_layer_set_background_color(TextLayer * text_layer, enum GColor color) {
-}
+Layer* text_layer_get_layer(TextLayer * text_layer) { return NULL; }
 
-void text_layer_set_font(TextLayer * text_layer, GFont font ) {
-}
+void text_layer_set_background_color(TextLayer * text_layer, enum GColor color) { }
+
+void text_layer_set_font(TextLayer * text_layer, GFont font ) { }
 
 void text_layer_set_text(TextLayer * text_layer, const char * text ) {
   if (mock_text_layer_set_text != NULL)
     mock_text_layer_set_text(text_layer, text);
 }
 
-void text_layer_set_text_alignment(TextLayer * text_layer, enum GTextAlignment text_alignment ) {
-}
+void text_layer_set_text_alignment(TextLayer * text_layer, enum GTextAlignment text_alignment ) { }
 
-void text_layer_set_text_color(TextLayer * text_layer, enum GColor color ) {
-}
+void text_layer_set_text_color(TextLayer * text_layer, enum GColor color ) { }
 
 // Window
 // =================
 
 Layer* window_get_root_layer(const Window * window) {
   return NULL;
+}
+
+// App Message
+// =================
+
+AppMessageInboxReceived (*mock_app_message_register_inbox_received)(AppMessageInboxReceived received_callback) = NULL;
+void pebble_mock_app_message_register_inbox_received(AppMessageInboxReceived (*mock)(AppMessageInboxReceived received_callback)) {
+  mock_app_message_register_inbox_received = mock;
+}
+
+AppMessageResult app_message_open(const uint32_t size_inbound, const uint32_t size_outbound) {
+  return APP_MSG_OK;
+}
+
+void app_message_deregister_callbacks(void) { }
+
+AppMessageInboxReceived app_message_register_inbox_received(AppMessageInboxReceived received_callback) {
+  if (mock_app_message_register_inbox_received != NULL)
+    return mock_app_message_register_inbox_received(received_callback);
+  return NULL;
+}
+
+AppMessageInboxDropped app_message_register_inbox_dropped(AppMessageInboxDropped dropped_callback) {
+  return NULL;
+}
+
+AppMessageOutboxSent app_message_register_outbox_sent(AppMessageOutboxSent sent_callback) {
+  return NULL;
+}
+
+AppMessageOutboxFailed app_message_register_outbox_failed(AppMessageOutboxFailed failed_callback) {
+  return NULL;
+}
+
+AppMessageResult app_message_outbox_begin(DictionaryIterator **iterator) {
+  return APP_MSG_OK;
+}
+
+AppMessageResult app_message_outbox_send(void) {
+  return APP_MSG_OK;
 }
 
 // Storage
@@ -100,13 +167,9 @@ bool persist_exists(const uint32_t key) {
   return true;
 }
 
-int persist_get_size(const uint32_t key) {
-  return 1;
-}
+int persist_get_size(const uint32_t key) { return 1; }
 
-bool persist_read_bool(const uint32_t key) {
-  return true;
-}
+bool persist_read_bool(const uint32_t key) { return true; }
 
 int persist_read_data(const uint32_t key, void * buffer, const size_t buffer_size) {
   if (mock_persist_read_data != NULL)
@@ -120,24 +183,24 @@ int32_t persist_read_int(const uint32_t key) {
   return 1;
 }
 
-int persist_read_string(const uint32_t key, char * buffer, const size_t buffer_size) {
-  return 1;
+int persist_read_string(const uint32_t key, char * buffer, const size_t buffer_size) { 
+  return 1; 
 }
 
-status_t persist_write_bool(const uint32_t key, const bool value) {
-  return S_SUCCESS;
+status_t persist_write_bool(const uint32_t key, const bool value) { 
+  return S_SUCCESS; 
 }
 
-int persist_write_data(const uint32_t key, const void * data, const size_t size) {
-  return 1;
+int persist_write_data(const uint32_t key, const void * data, const size_t size) { 
+  return 1; 
 }
 
 status_t persist_write_int(const uint32_t key, const int32_t value) {
-  return S_SUCCESS;
+  return S_SUCCESS; 
 }
 
-int persist_write_string(const uint32_t key, const char * cstring) {
-  return 1;
+int persist_write_string(const uint32_t key, const char * cstring) { 
+  return 1; 
 }
 
 // Logging
