@@ -13,3 +13,19 @@
 .disabled .select-triangle {
   border-top-color: #a8a8a8;
 }
+.item-select-wrap {
+  position: relative;
+  float: right;
+  width: 265px;
+  height: 20px;
+}
+
+.item-select-wrap select {
+  right: 20px;
+  top: 4px;
+}
+.item-select-wrap .select-triangle {
+  right: 0;
+  top: 10px;
+  pointer-events: none;
+}
