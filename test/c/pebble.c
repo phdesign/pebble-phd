@@ -100,6 +100,11 @@ void pebble_mock_app_message_register_inbox_received(AppMessageInboxReceived (*m
   mock_app_message_register_inbox_received = mock;
 }
 
+AppMessageResult (*mock_app_message_outbox_send)(void) = NULL;
+void pebble_mock_app_message_outbox_send(AppMessageResult (*mock)(void)) {
+  mock_app_message_outbox_send = mock;
+}
+
 AppMessageResult app_message_open(const uint32_t size_inbound, const uint32_t size_outbound) {
   return APP_MSG_OK;
 }
@@ -129,6 +134,8 @@ AppMessageResult app_message_outbox_begin(DictionaryIterator **iterator) {
 }
 
 AppMessageResult app_message_outbox_send(void) {
+  if (mock_app_message_outbox_send != NULL)
+    return mock_app_message_outbox_send();
   return APP_MSG_OK;
 }
 
@@ -206,7 +213,15 @@ int persist_write_string(const uint32_t key, const char * cstring) {
 // Logging
 // =================
 
+static bool enable_logs = false;
+void pebble_mock_enable_logs(bool enabled) {
+  enable_logs = enabled;
+}
+
 void app_log(uint8_t log_level, const char * src_filename, int src_line_number, const char * fmt, ...) {
+  if (!enable_logs) return;
+
+
   char msg[255] = "";
   char level[8] = "";
 

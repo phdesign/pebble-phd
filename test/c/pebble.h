@@ -193,6 +193,7 @@ AppMessageResult app_message_outbox_send(void);
 
 // Mocks
 void pebble_mock_app_message_register_inbox_received(AppMessageInboxReceived (*mock)(AppMessageInboxReceived received_callback));
+void pebble_mock_app_message_outbox_send(AppMessageResult (*mock)(void));
 
 // Storage
 // =================
@@ -255,3 +256,4 @@ enum AppLogLevel {
 
 // Functions
 void app_log(uint8_t log_level, const char * src_filename, int src_line_number, const char * fmt, ...);
+void pebble_mock_enable_logs(bool enabled);

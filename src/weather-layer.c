@@ -9,7 +9,6 @@
 #include "weather-layer.h"
 
 static TextLayer *s_weather_layer = NULL;
-static bool s_phone_loaded = false;
 static int s_update_retry_count = 0;
 static time_t s_last_retry;
 
@@ -32,10 +31,6 @@ static void update_weather_text(int temperature, char *conditions) {
 }
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
-  // We'll be sent a message when the js first loads
-  if (!s_phone_loaded)
-    s_phone_loaded = true;
-
   // Read first item
   Tuple *t = dict_read_first(iterator);
 
@@ -96,11 +91,11 @@ static void load_last_weather() {
   }
 }
 
-static bool update_is_required() {
+static bool update_is_required(struct tm *tick_time) {
   if (!config()->weather_enabled)
     return false;
 
-  time_t now = time(NULL);
+  time_t now = mktime(tick_time);
   double seconds_since_last_update = difftime(now, config()->weather_last_updated);
   int seconds_till_next_update = WEATHER_UPDATE_MINS * 60;
 
@@ -132,14 +127,12 @@ static bool update_is_required() {
     return false;
 
   s_update_retry_count++;
+  s_last_retry = now;
   return true;
 }
 
 void weather_update(struct tm *tick_time) {
-  if (!s_phone_loaded)
-    return;
-
-  if (update_is_required()) {
+  if (update_is_required(tick_time)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather, last update was %s", format_date_time(config()->weather_last_updated));
     // Begin dictionary
     DictionaryIterator *iter;

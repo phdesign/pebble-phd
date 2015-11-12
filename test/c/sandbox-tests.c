@@ -53,6 +53,13 @@ static void test_i_can_create_a_custom_24h_time() {
   //printf("\n");
 //}
 
+static void test_should_convert_from_time_to_tm_and_back() {
+  time_t expected_time = time(NULL);
+  struct tm *transmission_time = localtime(&expected_time);
+  time_t actual_time = mktime(transmission_time);
+  assert_ulong_equal(expected_time, actual_time);
+}
+
 static void test_i_can_create_a_custom_time() {
   char str_time[50];
   time_t custom_time = mktime(&(struct tm) {
@@ -90,11 +97,14 @@ static void test_should_print_number_given_an_int() {
 
 void sandbox_test_fixture(void) {
   test_fixture_start();      
+
   run_test(test_should_print_number_given_an_int);   
   run_test(test_should_print_number_given_a_short);   
   run_test(test_size_of_time_t_same_as_long);
   run_test(test_i_can_create_a_custom_time);
   run_test(test_i_can_create_a_custom_24h_time);
   run_test(test_i_can_create_a_custom_another_time);
+  run_test(test_should_convert_from_time_to_tm_and_back);
+
   test_fixture_end();       
 }

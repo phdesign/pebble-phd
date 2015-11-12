@@ -8,9 +8,14 @@
 
 static char *s_text_layer_text = NULL;
 static void *s_weather_layer;
-static Tuple *temperature;
-static Tuple *conditions;
+static Tuple *temperature = NULL;
+static Tuple *conditions = NULL;
+static int dict_next_count = 0;
+static int received_msg_count = 0;
 static AppMessageInboxReceived s_send_message = NULL;
+
+// Mock functions
+// ==============
 
 static TextLayer* mock_text_layer_create(struct GRect frame) {
   // Return a mock text layer, if it's NULL then our code won't try writing to it
@@ -31,12 +36,96 @@ static Tuple * mock_dict_read_first(DictionaryIterator *iter) {
 }
 
 static Tuple * mock_dict_read_next(DictionaryIterator *iter) {
-  static int count = 0;
   // This is an iterator function, we have to return NULL when done
-  if (count++ > 0) 
+  if (dict_next_count++ > 0) 
     return NULL;
 
   return conditions;
+}
+
+static AppMessageResult mock_app_message_outbox_send(void) {
+  received_msg_count++;
+  return APP_MSG_OK;
+}
+
+// Helpers
+// =======
+
+static Tuple * make_tuple(key, type, length) {
+  Tuple *ret = calloc(sizeof(Tuple) + length, 1);
+  if (ret) {
+    memcpy(
+      ret, 
+      (&(Tuple const){
+        .key = key,
+        .length = length,
+        .type = type
+      }), 
+      sizeof(Tuple)
+    );
+  }
+  return ret;
+}
+
+// Tests 
+// =====
+
+static void test_should_delay_update_retries_given_no_response() {
+  time_t now = time(NULL);
+  time_t test_time;
+  *(config()) = (Config) {
+    .weather_last_updated = now - (60 * 60),
+    .weather_enabled = true
+  };
+  pebble_mock_enable_logs(true);
+
+  // Setup the app message callbacks
+  weather_init();
+  // Send the initial phone message so the app knows it's ready to send requests
+  assert_false(s_send_message == NULL);
+  s_send_message(NULL, NULL);
+
+  // Request an update
+  weather_update(localtime(&now));
+  // Verify request sent
+  assert_int_equal(1, received_msg_count);
+  
+  // Request another update
+  weather_update(localtime(&now));
+  // Verify no request sent 
+  assert_int_equal(1, received_msg_count);
+
+  // Request another update after 30 sec
+  now += 30;
+  weather_update(localtime(&now));
+  // Verify request sent
+  assert_int_equal(2, received_msg_count);
+  
+  // Request another update after 30 sec
+  test_time = now + 30;
+  weather_update(localtime(&test_time));
+  // Verify no request sent 
+  assert_int_equal(2, received_msg_count);
+
+  // Request another update after 3 min
+  now += (3 * 60);
+  weather_update(localtime(&now));
+  // Verify request sent
+  assert_int_equal(3, received_msg_count);
+
+  // Request another update after 3 min
+  test_time = now + (3 * 60);
+  weather_update(localtime(&test_time));
+  // Verify no request sent 
+  assert_int_equal(3, received_msg_count);
+
+  // Request another update after 5 min
+  now += (5 * 60);
+  weather_update(localtime(&now));
+  // Verify request sent
+  assert_int_equal(4, received_msg_count);
+
+  pebble_mock_enable_logs(false);
 }
 
 static void test_should_display_updated_weather_given_no_recent_update() {
@@ -45,35 +134,6 @@ static void test_should_display_updated_weather_given_no_recent_update() {
     .weather_last_updated = now - (60 * 60),
     .weather_enabled = true
   };
-
-  temperature = calloc(sizeof(Tuple) + sizeof(int), 1);
-  if (temperature) {
-    memcpy(
-      temperature, 
-      (&(Tuple const){
-        .key = KEY_TEMPERATURE,
-        .length = sizeof(int),
-        .type = TUPLE_INT
-      }), 
-      sizeof(Tuple)
-    );
-  }
-  temperature->value->int32 = 28;
-
-  const char *conditions_val = "Cloudy";
-  conditions = calloc(sizeof(Tuple) + sizeof(conditions_val), 1);
-  if (conditions) {
-    memcpy(
-      conditions, 
-      (&(Tuple const){
-        .key = KEY_CONDITIONS,
-        .length = sizeof(conditions_val),
-        .type = TUPLE_CSTRING
-      }), 
-      sizeof(Tuple)
-    );
-  }
-  strcpy(conditions->value->cstring, conditions_val);
 
   // Setup the app message callbacks
   weather_init();
@@ -85,8 +145,11 @@ static void test_should_display_updated_weather_given_no_recent_update() {
   weather_update(localtime(&now));
 
   // Now fake the async response
-  pebble_mock_dict_read_first(mock_dict_read_first);
-  pebble_mock_dict_read_next(mock_dict_read_next);
+  temperature = make_tuple(KEY_TEMPERATURE, TUPLE_INT, sizeof(int));
+  temperature->value->int32 = 28;
+  conditions = make_tuple(KEY_CONDITIONS, TUPLE_CSTRING, 7);
+  strcpy(conditions->value->cstring, "Cloudy");
+
   s_send_message(NULL, NULL);
   pebble_mock_dict_read_first(NULL);
 
@@ -109,15 +172,25 @@ static void test_should_display_saved_weather_given_recent_data() {
   assert_string_equal("14C, Windy", s_text_layer_text);
 }
 
+// Text fixture stuff
+// ==================
+
 static void test_setup() {
   pebble_mock_text_layer_set_text(mock_text_layer_set_text);
   pebble_mock_text_layer_create(mock_text_layer_create);
   pebble_mock_app_message_register_inbox_received(mock_app_message_register_inbox_received);
+  pebble_mock_dict_read_first(mock_dict_read_first);
+  pebble_mock_dict_read_next(mock_dict_read_next);
+  pebble_mock_app_message_outbox_send(mock_app_message_outbox_send);
 
   s_text_layer_text = malloc(MAX_TEXT_LAYER_LENGTH);
   // Here I'm just randomly giving s_weather_layer something to point to so it's not null
   s_weather_layer = malloc(sizeof(int));
   *((int*)s_weather_layer) = 10;
+  temperature = NULL;
+  conditions = NULL;
+  dict_next_count = 0;
+  received_msg_count = 0;
 }
 
 static void test_teardown() {
@@ -125,6 +198,8 @@ static void test_teardown() {
   pebble_mock_text_layer_set_text(NULL);
   pebble_mock_text_layer_create(NULL);
   pebble_mock_app_message_register_inbox_received(NULL);
+  pebble_mock_dict_read_first(NULL);
+  pebble_mock_dict_read_next(NULL);
 
   free(s_text_layer_text);
   free(s_weather_layer);
@@ -137,6 +212,7 @@ void weather_layer_test_fixture(void) {
 
   run_test(test_should_display_saved_weather_given_recent_data);   
   run_test(test_should_display_updated_weather_given_no_recent_update);   
+  run_test(test_should_delay_update_retries_given_no_response);   
 
   test_fixture_end();       
 }
