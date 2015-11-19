@@ -172,6 +172,19 @@ static void test_should_display_saved_weather_given_recent_data() {
   assert_string_equal("14C, Windy", s_text_layer_text);
 }
 
+static void test_should_display_temperature_only_given_no_conditions() {
+  *(config()) = (Config) {
+    .weather_conditions = "",
+    .weather_temp = 14,
+    .weather_last_updated = time(NULL),
+    .weather_enabled = true
+  };
+  
+  weather_window_load(NULL);
+
+  assert_string_equal("14C", s_text_layer_text);
+}
+
 // Text fixture stuff
 // ==================
 
@@ -211,6 +224,7 @@ void weather_layer_test_fixture(void) {
   fixture_teardown(test_teardown);
 
   run_test(test_should_display_saved_weather_given_recent_data);   
+  run_test(test_should_display_temperature_only_given_no_conditions);
   run_test(test_should_display_updated_weather_given_no_recent_update);   
   run_test(test_should_delay_update_retries_given_no_response);   
 

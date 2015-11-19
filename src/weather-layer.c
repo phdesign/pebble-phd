@@ -14,17 +14,14 @@ static time_t s_last_retry;
 
 static void update_weather_text(int temperature, char *conditions) {
   static char weather_info[32];
+  char formatted_conditions[11] = "";
 
   if (s_weather_layer == NULL)
     return;
 
-  // Assemble full string and display
-  snprintf(
-      weather_info,
-      sizeof(weather_info),
-      "%dC, %s",
-      temperature,
-      strlen(conditions) == 0 ? "" : conditions);
+  if (strlen(conditions) > 0)
+    snprintf(formatted_conditions, sizeof(formatted_conditions), ", %s", conditions);
+  snprintf(weather_info, sizeof(weather_info), "%dC%s", temperature, formatted_conditions);
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Update weather %s", weather_info);
   text_layer_set_text(s_weather_layer, weather_info);
