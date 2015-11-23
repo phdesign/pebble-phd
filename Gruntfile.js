@@ -95,6 +95,19 @@ module.exports = function(grunt) {
         src: '<%= config.paths.testBundle %>'
       }
     },
+
+    run: {
+      options: {
+        cwd: 'test/c/',
+        failOnError: true
+      },
+      make: {
+        cmd: 'make'
+      },
+      test: {
+        cmd: './test'
+      }
+    },
     
     'gh-pages': {
       options: {
@@ -105,18 +118,19 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-remove-logging');
+  grunt.loadNpmTasks('grunt-run');
 
   grunt.registerTask('build', 'Build and test the system', function(target) {
     if (target == 'nologs') 
       appConfig.enableLogs = false;
 
-    var tasks = ['copy', 'jshint', 'browserify', 'removelogging:test', 'jasmine'];
+    var tasks = ['copy', 'jshint', 'browserify', 'removelogging:test', 'jasmine', 'run:make', 'run:test'];
     if (!appConfig.enableLogs)
       tasks.push('removelogging:build');
     grunt.task.run(tasks);

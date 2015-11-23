@@ -12,6 +12,4 @@
 #define KEY_SHOW_WEATHER 2
 
 
-#undef APP_LOG
-#define APP_LOG(...)
 

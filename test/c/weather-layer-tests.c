@@ -77,7 +77,6 @@ static void test_should_delay_update_retries_given_no_response() {
     .weather_last_updated = now - (60 * 60),
     .weather_enabled = true
   };
-  pebble_mock_enable_logs(true);
 
   // Setup the app message callbacks
   weather_init();
@@ -124,8 +123,6 @@ static void test_should_delay_update_retries_given_no_response() {
   weather_update(localtime(&now));
   // Verify request sent
   assert_int_equal(4, received_msg_count);
-
-  pebble_mock_enable_logs(false);
 }
 
 static void test_should_display_updated_weather_given_no_recent_update() {

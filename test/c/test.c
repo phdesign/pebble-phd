@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "seatest.h"
 #include "sandbox-tests.h"
 #include "time-layer-tests.h"
@@ -12,5 +13,6 @@ void all_tests(void) {
 }
 
 int main(void) {
-  return run_tests(all_tests);
+  bool passed = run_tests(all_tests);
+  return passed ? 0 : -1;
 }
