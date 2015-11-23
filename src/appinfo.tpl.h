@@ -11,7 +11,7 @@
   %>#define <%= prop %> <%= config.info.appKeys[prop] %>
 <% } %>
 
-<% if (!config.info.enableLogs) {
+<% if (!config.enableLogs) {
 %>#undef APP_LOG
 #define APP_LOG(...)
 <% } %>

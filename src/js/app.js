@@ -1,6 +1,5 @@
 var weather = require('./weather.js');
 var config = require('./config.js');
-var appInfo = require('../../appinfo.json');
 
 function noop() {}
 
@@ -10,16 +9,6 @@ function init() {
   // Get the initial weather
   weather.sendWeather();
 }
-
-// This doesn't need to wait till we've initialised
-(function disableLogs() {
-  if (appInfo.enableLogs) return;
-  console.log = noop;
-  console.warn = noop;
-  console.info = noop;
-  console.error = noop;
-  console.debug = noop;
-})();
 
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', function(e) {

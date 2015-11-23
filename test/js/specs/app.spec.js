@@ -66,7 +66,7 @@ describe('App', function() {
 
       expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
           'KEY_TEMPERATURE': 10,
-          'KEY_CONDITIONS': 'Clouds'
+          'KEY_CONDITIONS': 'cloudy'
         }, jasmine.any(Function), jasmine.any(Function));
     });
 
@@ -77,7 +77,7 @@ describe('App', function() {
 
       expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
           'KEY_TEMPERATURE': 10,
-          'KEY_CONDITIONS': 'Clouds'
+          'KEY_CONDITIONS': 'cloudy'
         }, jasmine.any(Function), jasmine.any(Function));
     });
 

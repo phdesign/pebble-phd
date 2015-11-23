@@ -5,7 +5,6 @@
   "companyName": "phdesign",
   "versionLabel": "1.1",
   "sdkVersion": "3",
-  "enableLogs": true,
   "targetPlatforms": [
     "aplite", 
     "basalt"

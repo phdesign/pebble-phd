@@ -2,7 +2,12 @@ module.exports = function(grunt) {
 
   var appConfig = {
     info: grunt.file.readJSON('appinfo.json'),
-    keys: grunt.file.readJSON('keys.json')
+    keys: grunt.file.readJSON('keys.json'),
+    enableLogs: true,
+    paths: {
+      bundle: 'src/js/pebble-js-app.js',
+      testBundle: 'test/js/specs-bundle.js'
+    }
   };
 
   grunt.initConfig({
@@ -26,7 +31,7 @@ module.exports = function(grunt) {
       files: [
         'Gruntfile.js', 
         'src/js/**/*.js',
-        '!src/js/pebble-js-app.js',
+        '!<%= config.paths.bundle %>',
         '!src/js/*.tpl.js',
         'test/js/specs/**/*.js',
         'test/js/helpers/**/*.js'
@@ -46,10 +51,10 @@ module.exports = function(grunt) {
         },
         src: [
           'src/js/**/*.js',
-          '!src/js/pebble-js-app.js',
+          '!<%= config.paths.bundle %>',
           '!src/js/*.tpl.js'
         ],
-        dest: 'src/js/pebble-js-app.js'
+        dest: '<%= config.paths.bundle %>'
       },
       test: {
         options: {
@@ -64,7 +69,7 @@ module.exports = function(grunt) {
         src: [
           'test/js/specs/*.spec.js'
         ],
-        dest: 'test/js/specs-bundle.js'
+        dest: '<%= config.paths.testBundle %>'
       }
     },
 
@@ -75,10 +80,19 @@ module.exports = function(grunt) {
             'test/js/mocks/pebble.js',
             'test/js/mocks/navigator.js'
           ],
-          specs: 'test/js/specs-bundle.js',
+          specs: '<%= config.paths.testBundle %>',
           outfile: 'test/js/_SpecRunner.html',
           keepRunner: true
         }
+      }
+    },
+
+    removelogging: {
+      build: {
+        src: '<%= config.paths.bundle %>'
+      },
+      test: {
+        src: '<%= config.paths.testBundle %>'
       }
     },
     
@@ -96,8 +110,19 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-gh-pages');
+  grunt.loadNpmTasks('grunt-remove-logging');
 
-  grunt.registerTask('default', ['copy', 'jshint', 'browserify', 'jasmine']);
+  grunt.registerTask('build', 'Build and test the system', function(target) {
+    if (target == 'nologs') 
+      appConfig.enableLogs = false;
+
+    var tasks = ['copy', 'jshint', 'browserify', 'removelogging:test', 'jasmine'];
+    if (!appConfig.enableLogs)
+      tasks.push('removelogging:build');
+    grunt.task.run(tasks);
+  });
+
+  grunt.registerTask('default', ['build']);
   grunt.registerTask('deploy', ['gh-pages']);
 
 };
