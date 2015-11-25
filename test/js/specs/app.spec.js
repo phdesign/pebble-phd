@@ -45,6 +45,23 @@ describe('App', function() {
     config.settings = origSettings;
   });
 
+  it('should send config data given a ready event', function() {
+    var origSettings = config.settings;
+    config.settings = { showWeather: false };
+
+    spyOn(Pebble, 'sendAppMessage');
+
+    Pebble.events.ready();
+
+    expect(Pebble.sendAppMessage).toHaveBeenCalledWith(
+      { 'KEY_SHOW_WEATHER': false },
+      jasmine.any(Function),
+      jasmine.any(Function)
+    );
+
+    config.settings = origSettings;
+  });
+
   describe('open-weather-map', function() {
 
     beforeEach(function() {
@@ -59,20 +76,10 @@ describe('App', function() {
       });
     });
 
-    it('should send weather data given a ready event', function() {
-      spyOn(Pebble, 'sendAppMessage');
-
-      Pebble.events.ready();
-
-      expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
-          'KEY_TEMPERATURE': 10,
-          'KEY_CONDITIONS': 'cloudy'
-        }, jasmine.any(Function), jasmine.any(Function));
-    });
-
     it('should send weather data given an appmessage event', function() {
       spyOn(Pebble, 'sendAppMessage');
 
+      Pebble.events.ready();
       Pebble.events.appmessage();
 
       expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
@@ -97,20 +104,10 @@ describe('App', function() {
       });
     });
 
-    it('should send weather data given a ready event', function() {
-      spyOn(Pebble, 'sendAppMessage');
-
-      Pebble.events.ready();
-
-      expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
-          'KEY_TEMPERATURE': 24.3,
-          'KEY_CONDITIONS': ''
-        }, jasmine.any(Function), jasmine.any(Function));
-    });
-
     it('should send weather data given an appmessage event', function() {
       spyOn(Pebble, 'sendAppMessage');
 
+      Pebble.events.ready();
       Pebble.events.appmessage();
 
       expect(Pebble.sendAppMessage).toHaveBeenCalledWith({

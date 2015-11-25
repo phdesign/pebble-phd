@@ -6,7 +6,7 @@ module.exports = {
 
   settings: {
     configVersion: 1,
-    showWeather: true,
+    showWeather: false,
     weatherService: 'yahoo-weather'
   },
 

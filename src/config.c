@@ -7,7 +7,7 @@
 #include "config.h"
 
 static Config s_config = {
-  .weather_enabled = true
+  .weather_enabled = false
 };
 
 static bool s_loaded = false;

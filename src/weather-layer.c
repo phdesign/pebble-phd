@@ -152,8 +152,14 @@ void weather_window_load(Window *window) {
   text_layer_set_font(s_weather_layer, g_small_font);
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
+  layer_set_hidden(text_layer_get_layer(s_weather_layer), !config()->weather_enabled);
 
+  // Load our stored weather if it's valid so we see something better than Loading...
   load_last_weather();
+  if (config()->weather_enabled) {
+    time_t now = time(NULL);
+    weather_update(localtime(&now));
+  }
 }
 
 void weather_window_unload(Window *window) {

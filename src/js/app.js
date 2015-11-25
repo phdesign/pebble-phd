@@ -6,8 +6,7 @@ function noop() {}
 function init() {
   config.loadConfig();
   weather.setWeatherService(config.settings.weatherService);
-  // Get the initial weather
-  weather.sendWeather();
+  config.sendConfig();
 }
 
 // Listen for when the watchface is opened
