@@ -63,12 +63,11 @@ module.exports = {
     // Copy received config properties onto our exisitng config
     extend(this.settings, newConfig);
     this.saveConfig();
-
-    // If weather service was changed, send updated weather to the watch
-    if (weather.setWeatherService(this.settings.weatherService))
-      weather.sendWeather();
-
     this.sendConfig();
+
+    weather.setWeatherService(this.settings.weatherService);
+    if (this.settings.showWeather)
+      weather.sendWeather();
   },
 
 };

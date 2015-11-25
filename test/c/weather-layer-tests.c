@@ -141,6 +141,39 @@ static void test_should_display_updated_weather_given_no_recent_update() {
   // Request an update
   weather_update(localtime(&now));
 
+  // Now fake the async response - returned via dict_read_first
+  temperature = make_tuple(KEY_TEMPERATURE, TUPLE_INT, sizeof(int));
+  temperature->value->int32 = 28;
+  conditions = make_tuple(KEY_CONDITIONS, TUPLE_CSTRING, 7);
+  strcpy(conditions->value->cstring, "Cloudy");
+
+  s_send_message(NULL, NULL);
+
+  assert_string_equal("28C, Cloudy", s_text_layer_text);
+
+  // Now send an empty condition anc confirm it's cleared
+
+
+  free(temperature);
+  free(conditions);
+}
+
+static void test_should_clear_conditions_given_no_condition_data() {
+  time_t now = time(NULL);
+  *(config()) = (Config) {
+    .weather_last_updated = now - (60 * 60),
+    .weather_enabled = true
+  };
+
+  // Setup the app message callbacks
+  weather_init();
+  // Send the initial phone message so the app knows it's ready to send requests
+  assert_false(s_send_message == NULL);
+  s_send_message(NULL, NULL);
+
+  // Request an update
+  weather_update(localtime(&now));
+
   // Now fake the async response
   temperature = make_tuple(KEY_TEMPERATURE, TUPLE_INT, sizeof(int));
   temperature->value->int32 = 28;
@@ -151,6 +184,17 @@ static void test_should_display_updated_weather_given_no_recent_update() {
   pebble_mock_dict_read_first(NULL);
 
   assert_string_equal("28C, Cloudy", s_text_layer_text);
+
+  // Now fake the async response
+  temperature = make_tuple(KEY_TEMPERATURE, TUPLE_INT, sizeof(int));
+  temperature->value->int32 = 10;
+  conditions = make_tuple(KEY_CONDITIONS, TUPLE_CSTRING, 1);
+  strcpy(conditions->value->cstring, "");
+
+  s_send_message(NULL, NULL);
+  pebble_mock_dict_read_first(NULL);
+
+  assert_string_equal("10C", s_text_layer_text);
 
   free(temperature);
   free(conditions);

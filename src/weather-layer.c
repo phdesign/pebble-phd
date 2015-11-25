@@ -30,6 +30,7 @@ static void update_weather_text(int temperature, char *conditions) {
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Read first item
   Tuple *t = dict_read_first(iterator);
+  bool weather_information_received = false;
 
   // For all items
   while(t != NULL) {
@@ -38,11 +39,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       case KEY_TEMPERATURE:
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Received temp %d", (int)t->value->int32);
         config()->weather_temp = (int)t->value->int32;
-        config()->weather_last_updated = time(NULL);
-        s_update_retry_count = 0;
+        weather_information_received = true;
         break;
       case KEY_CONDITIONS:
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Received conditions %s", t->value->cstring);
         snprintf(config()->weather_conditions, sizeof(config()->weather_conditions), "%s", t->value->cstring);
+        weather_information_received = true;
         break;
       case KEY_SHOW_WEATHER:
         config()->weather_enabled = t->value->int32 > 0;
@@ -58,7 +60,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     t = dict_read_next(iterator);
   }
 
-  update_weather_text(config()->weather_temp, config()->weather_conditions);
+  if (weather_information_received) {
+    config()->weather_last_updated = time(NULL);
+    s_update_retry_count = 0;
+    update_weather_text(config()->weather_temp, config()->weather_conditions);
+  }
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
@@ -97,8 +103,8 @@ static bool update_is_required(struct tm *tick_time) {
   int seconds_till_next_update = WEATHER_UPDATE_MINS * 60;
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, 
-      "Checking if update required. %f seconds since last update, %d seconds till next update", 
-      seconds_since_last_update,
+      "Checking if update required. %d seconds since last update, %d seconds till next update", 
+      (int)seconds_since_last_update,
       seconds_till_next_update);
 
   if (seconds_since_last_update < seconds_till_next_update)
@@ -154,12 +160,7 @@ void weather_window_load(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
   layer_set_hidden(text_layer_get_layer(s_weather_layer), !config()->weather_enabled);
 
-  // Load our stored weather if it's valid so we see something better than Loading...
   load_last_weather();
-  if (config()->weather_enabled) {
-    time_t now = time(NULL);
-    weather_update(localtime(&now));
-  }
 }
 
 void weather_window_unload(Window *window) {

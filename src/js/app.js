@@ -7,6 +7,8 @@ function init() {
   config.loadConfig();
   weather.setWeatherService(config.settings.weatherService);
   config.sendConfig();
+  if (config.settings.showWeather)
+    weather.sendWeather();
 }
 
 // Listen for when the watchface is opened
