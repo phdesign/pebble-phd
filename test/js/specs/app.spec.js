@@ -40,7 +40,7 @@ describe('App', function() {
 
     Pebble.events.showConfiguration();
 
-    expect(Pebble.openURL).toHaveBeenCalledWith('http://phdesign.com.au/pebble-phd?cfg=%7B%22thingOne%22%3Atrue%2C%22thingTwo%22%3A%22apple%22%7D');
+    expect(Pebble.openURL).toHaveBeenCalledWith('https://phdesign.com.au/pebble-phd?cfg=%7B%22thingOne%22%3Atrue%2C%22thingTwo%22%3A%22apple%22%7D');
 
     config.settings = origSettings;
   });

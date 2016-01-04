@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   var appConfig = {
     info: grunt.file.readJSON('appinfo.json'),
     keys: grunt.file.readJSON('keys.json'),
-    enableLogs: true,
+    enableLogs: false,
     paths: {
       bundle: 'src/js/pebble-js-app.js',
       testBundle: 'test/js/specs-bundle.js'
