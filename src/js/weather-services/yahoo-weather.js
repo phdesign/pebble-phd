@@ -1,5 +1,6 @@
 var utils = require('../utils.js');
 var request = require('request');
+var keys = require('../../../keys.json');
 
 function getShortConditionText(conditionCode) {
   var remap = {
@@ -57,17 +58,44 @@ function getShortConditionText(conditionCode) {
   return remap[conditionCode] || 'unknown';
 }
 
-function buildRequestOptions(lat, lon) {
-  return {
+function getLocationAddress(lat, lon, callback) {
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lon + '&key=' + keys.googleServerKey;
+
+  request({ url: url, json: true}, function(err, xhr, data) {
+    if (!data || !data.results || data.results.length === 0) {
+      console.log('Unable to retrieve location address from Google');
+    }
+    callback(data.results[0].formatted_address);
+  });
+}
+
+function getCurrentConditionsFromAddress(address, callback) {
+  var options = {
     url: 'https://query.yahooapis.com/v1/public/yql',
     //url: 'http://localhost:8080/yahoo-weather.json',
     qs: {
-      q: 'select * from weather.forecast where woeid in (select woeid from geo.placefinder(1) where text="' + lat + ',' + lon + '" and gflags="R")',
+      q: 'select * from weather.forecast where woeid in (select woeid from geo.places where text="' + address + '")',
       format: 'json'
     },
     json: true,
     verbose: true
   };
+  
+  request(options, function(err, xhr, data) {
+    console.log('Received weather data from Yahoo Weather');
+    console.log('First 255 bytes:', JSON.stringify(data).substr(0, 255));
+
+    var values = readWeatherValues(data);
+   
+    if (!values || !values.temp || !values.conditions) {
+      console.log('Unable to process weather data, aborting...');
+      return;
+    }
+    console.log('Temperature is ' + values.temp);
+    console.log('Conditions are ' + values.conditions);
+
+    callback(values);
+  });
 }
 
 function readWeatherValues(rawData) {
@@ -84,23 +112,10 @@ module.exports = {
   name: 'Yahoo! Weather',
 
   getCurrentConditions: function(coords, done) {
-    var options = buildRequestOptions(coords.latitude, coords.longitude);
-
-    request(options, function(err, xhr, data) {
-      console.log('Received weather data from Yahoo Weather');
-      console.log('First 255 bytes:', JSON.stringify(data).substr(0, 255));
-
-      var values = readWeatherValues(data);
-     
-      if (!values || !values.temp || !values.conditions) {
-        console.log('Unable to process weather data, aborting...');
-        return;
-      }
-      console.log('Temperature is ' + values.temp);
-      console.log('Conditions are ' + values.conditions);
-
-      done(values);
-    });
+    getLocationAddress(coords.latitude, coords.longitude, 
+      function(address) { 
+        getCurrentConditionsFromAddress(address, done); 
+      });
   }
 
 };

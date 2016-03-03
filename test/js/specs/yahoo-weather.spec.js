@@ -3,15 +3,20 @@ var api = require('../../../src/js/weather-services/yahoo-weather.js');
 
 describe('Yahoo Weather API', function() {
   var sampleResponse;
+  var googleResponse;
   var coords;
 
   beforeEach(function() {
     // Load sampleResponse each time so tests can alter it
     sampleResponse = require('../fixtures/yahoo-weather.json');
+    googleResponse = require('../fixtures/google-geolocation.json');
     coords = { latitude: 0, longitude: 0 };
 
     request.and.callFake(function(options, callback) {
-      callback(null, {}, sampleResponse);
+      if (options.url.match(/maps\.googleapis\.com/)) 
+        callback(null, {}, googleResponse);
+      else
+        callback(null, {}, sampleResponse);
     });
   });
 

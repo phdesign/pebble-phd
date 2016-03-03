@@ -11,3 +11,4 @@ _SpecRunner.html
 test/js/specs-bundle.js
 test/c/test
 *.dSYM
+src/appinfo.h
