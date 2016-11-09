@@ -2,13 +2,16 @@
 
 #include <pebble.h>
 
-#define CONFIG_STORAGE_VERSION 1
+#define CONFIG_STORAGE_VERSION 2
+#define TEMP_UNIT_CELSIUS 1
+#define TEMP_UNIT_FAHRENHEIT 2
 
 typedef struct {
   char weather_conditions[50];
   int weather_temp;
   time_t weather_last_updated;
   bool weather_enabled;
+  int weather_temp_unit;
 } Config;
 
 void config_init(void);
