@@ -1,6 +1,7 @@
 var utils = require('../utils.js');
 var request = require('request');
 var keys = require('../../../keys.json');
+var config = require('.././config.js');
 
 function getShortConditionText(conditionCode) {
   var remap = {
@@ -99,9 +100,11 @@ function getCurrentConditionsFromAddress(address, callback) {
 }
 
 function readWeatherValues(rawData) {
-  var celsius = utils.fahreheitToCelsius(rawData.query.results.channel.item.condition.temp);
+  var temperature = rawData.query.results.channel.item.condition.temp;
+  if (config.settings.temperatureUnit === config.CELSIUS)
+    temperature = utils.fahreheitToCelsius(temperature);
   return {
-    temp: Math.round(celsius),
+    temp: Math.round(temperature),
     conditions: getShortConditionText(rawData.query.results.channel.item.condition.code)
   };
 }

@@ -5,7 +5,6 @@ function noop() {}
 
 function init() {
   config.loadConfig();
-  weather.setWeatherService(config.settings.weatherService);
   config.sendConfig();
   if (config.settings.showWeather)
     weather.sendWeather();

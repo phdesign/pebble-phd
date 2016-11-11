@@ -1,4 +1,5 @@
 var gps = require('./gps.js');
+var config = require('./config.js');
 var services = [
   require('./weather-services/open-weather-map.js'),
   require('./weather-services/bom.js'),
@@ -20,7 +21,8 @@ module.exports = {
           // Assemble dictionary using our keys
           var dictionary = {
             'KEY_TEMPERATURE': values.temp,
-            'KEY_CONDITIONS': values.conditions
+            'KEY_CONDITIONS': values.conditions,
+            'KEY_TEMPERATURE_UNIT': config.settings.temperatureUnit
           };
 
           // Send to Pebble

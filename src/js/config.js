@@ -2,22 +2,40 @@ var utils = require('./utils.js');
 var extend = require('extend');
 var weather = require('./weather.js');
 
+var CELSIUS = 1;
+var FAHRENHEIT = 2;
+var currentConfigVersion = 2;
+
 module.exports = {
 
   settings: {
-    configVersion: 1,
+    configVersion: currentConfigVersion,
     showWeather: false,
-    weatherService: 'yahoo-weather'
+    weatherService: 'yahoo-weather',
+    temperatureUnit: CELSIUS
   },
 
   isRunningInEmulator: function() {
     return Pebble.getActiveWatchInfo && /^qemu/.test(Pebble.getActiveWatchInfo().model);
   },
 
+  migrateV1SettingsToV2: function(settingsV1) {
+    settingsV1.temperatureUnit = CELSIUS;
+    return settingsV1;
+  },
+
   loadConfig: function() {
     if (localStorage.config) {
       try {
-        this.settings = JSON.parse(localStorage.config);
+        var savedSettings = JSON.parse(localStorage.config);
+        switch (savedSettings.configVersion) {
+          case 1:
+            this.settings = this.migrateV1SettingsToV2(savedSettings);
+            break;
+          case currentConfigVersion:
+            this.settings = savedSettings;
+            break;
+        }
       } catch (e) { } 
     }
 
@@ -43,9 +61,9 @@ module.exports = {
       'KEY_SHOW_WEATHER': !!this.settings.showWeather
     };
     Pebble.sendAppMessage(dictionary, function() {
-      console.log('Send successful!');
+      console.log('Send config successful!');
     }, function() {
-      console.log('Send failed!');
+      console.log('Send config failed!');
     });
   },
 
@@ -70,4 +88,6 @@ module.exports = {
       weather.sendWeather();
   },
 
+  CELSIUS: CELSIUS,
+  FAHRENHEIT: FAHRENHEIT
 };
