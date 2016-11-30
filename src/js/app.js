@@ -4,10 +4,11 @@ var config = require('./config.js');
 function noop() {}
 
 function init() {
+  config.onChange(function(settings) {
+    weather.setWeatherService(settings.weatherService);
+  });
   config.loadConfig();
   config.sendConfig();
-  if (config.settings.showWeather)
-    weather.sendWeather();
 }
 
 // Listen for when the watchface is opened

@@ -54,6 +54,8 @@ module.exports = {
         return false;
     }
 
+    if (config.settings.showWeather)
+      this.sendWeather();
     return true;
   }
 

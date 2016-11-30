@@ -1,10 +1,11 @@
 var utils = require('./utils.js');
 var extend = require('extend');
-var weather = require('./weather.js');
 
 var CELSIUS = 1;
 var FAHRENHEIT = 2;
 var currentConfigVersion = 2;
+
+var configChangedCallbacks = [];
 
 module.exports = {
 
@@ -39,8 +40,10 @@ module.exports = {
       } catch (e) { } 
     }
 
-    weather.setWeatherService(this.settings.weatherService);
-    console.log('Config loaded, using ' + weather.activeService.name + ' service');
+    configChangedCallbacks.forEach(function(fn) {
+      fn(this.settings);
+    }, this);
+    console.log('Config loaded, using ' + this.settings.weatherService + ' service');
   },
 
   saveConfig: function() {
@@ -83,9 +86,13 @@ module.exports = {
     this.saveConfig();
     this.sendConfig();
 
-    weather.setWeatherService(this.settings.weatherService);
-    if (this.settings.showWeather)
-      weather.sendWeather();
+    configChangedCallbacks.forEach(function(fn) {
+      fn(this.settings);
+    });
+  },
+
+  onChange: function(fn) {
+    configChangedCallbacks.push(fn);
   },
 
   CELSIUS: CELSIUS,
