@@ -1,6 +1,9 @@
 var $submitButton = $('#btn-submit'),
   $showWeather = $('#field-show-weather'),
-  $weatherService = $('#field-weather-service');
+  $weatherService = $('#field-weather-service'),
+  $temperatureUnit = $('#temperature-unit');
+
+var temperatureUnits = ['celsius', 'fahrenheit'];
 
 $(function() {
   loadConfigData();
@@ -15,7 +18,7 @@ function showWeatherHandler() {
       .toggleClass('disabled', !enabled)
       .find('input, select')
       .prop('disabled', !enabled);
-  }
+  };
 
   $showWeather.on('click', function() {
     toggleWeather(this.checked);
@@ -41,16 +44,25 @@ function loadConfigData() {
   } catch (e) { }
   console.log('Received current config as', config);
 
-  if (config && config.showWeather)
-    $showWeather[0].checked = config.showWeather;
-  if (config && config.weatherService)
-    $weatherService.val(config.weatherService);
+  if (config) {
+    if (config.showWeather)
+      $showWeather[0].checked = config.showWeather;
+    if (config.weatherService)
+      $weatherService.val(config.weatherService);
+    if (config.temperatureUnit) {
+      $temperatureUnit.find('a').each(function() {
+        var isActive = $(this).text().toLowerCase() === temperatureUnits[config.temperatureUnit - 1];
+        $(this).toggleClass('active', isActive);
+      });
+    }
+  }
 }
 
 function getConfigData() {
   return {
     showWeather: $showWeather[0].checked,
-    weatherService: $weatherService.val()
+    weatherService: $weatherService.val(),
+    temperatureUnit: temperatureUnits.indexOf($temperatureUnit.find('.active').text().toLowerCase()) + 1
   };
 }
 

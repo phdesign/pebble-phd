@@ -112,7 +112,7 @@ describe('App', function() {
       Pebble.events.appmessage();
 
       expect(Pebble.sendAppMessage).toHaveBeenCalledWith({
-          'KEY_TEMPERATURE': 24.3,
+          'KEY_TEMPERATURE': 24,
           'KEY_CONDITIONS': '',
           'KEY_TEMPERATURE_UNIT': 1
         }, jasmine.any(Function), jasmine.any(Function));

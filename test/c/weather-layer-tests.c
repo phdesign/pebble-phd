@@ -10,6 +10,7 @@ static char *s_text_layer_text = NULL;
 static void *s_weather_layer;
 static Tuple *temperature = NULL;
 static Tuple *conditions = NULL;
+static Tuple *temperature_unit = NULL;
 static int dict_next_count = 0;
 static int received_msg_count = 0;
 static AppMessageInboxReceived s_send_message = NULL;
@@ -36,11 +37,14 @@ static Tuple * mock_dict_read_first(DictionaryIterator *iter) {
 }
 
 static Tuple * mock_dict_read_next(DictionaryIterator *iter) {
-  // This is an iterator function, we have to return NULL when done
-  if (dict_next_count++ > 0) 
-    return NULL;
+  dict_next_count++;
+  if (dict_next_count == 1) 
+    return conditions;
+  else if (dict_next_count == 2) 
+    return temperature_unit;
 
-  return conditions;
+  // This is an iterator function, we have to return NULL when done
+  return NULL;
 }
 
 static AppMessageResult mock_app_message_outbox_send(void) {
@@ -146,6 +150,8 @@ static void test_should_display_updated_weather_given_no_recent_update() {
   temperature->value->int32 = 28;
   conditions = make_tuple(KEY_CONDITIONS, TUPLE_CSTRING, 7);
   strcpy(conditions->value->cstring, "Cloudy");
+  temperature_unit = make_tuple(KEY_TEMPERATURE_UNIT, TUPLE_INT, sizeof(int));
+  temperature_unit->value->int32 = TEMP_UNIT_CELSIUS;
 
   s_send_message(NULL, NULL);
 
@@ -156,6 +162,7 @@ static void test_should_display_updated_weather_given_no_recent_update() {
 
   free(temperature);
   free(conditions);
+  free(temperature_unit);
 }
 
 static void test_should_clear_conditions_given_no_condition_data() {
@@ -190,6 +197,8 @@ static void test_should_clear_conditions_given_no_condition_data() {
   temperature->value->int32 = 10;
   conditions = make_tuple(KEY_CONDITIONS, TUPLE_CSTRING, 1);
   strcpy(conditions->value->cstring, "");
+  temperature_unit = make_tuple(KEY_TEMPERATURE_UNIT, TUPLE_INT, sizeof(int));
+  temperature_unit->value->int32 = TEMP_UNIT_CELSIUS;
 
   s_send_message(NULL, NULL);
   pebble_mock_dict_read_first(NULL);
@@ -198,9 +207,10 @@ static void test_should_clear_conditions_given_no_condition_data() {
 
   free(temperature);
   free(conditions);
+  free(temperature_unit);
 }
 
-static void test_should_display_saved_weather_given_recent_data() {
+static void test_should_display_temperature_in_celsius_given_v1_config() {
   *(config()) = (Config) {
     .weather_conditions = "Windy",
     .weather_temp = 14,
@@ -213,17 +223,65 @@ static void test_should_display_saved_weather_given_recent_data() {
   assert_string_equal("14C, Windy", s_text_layer_text);
 }
 
+static void test_should_display_saved_weather_given_recent_data() {
+  *(config()) = (Config) {
+    .weather_conditions = "Windy",
+    .weather_temp = 14,
+    .weather_last_updated = time(NULL),
+    .weather_enabled = true,
+    .weather_temp_unit = TEMP_UNIT_CELSIUS
+  };
+  
+  weather_window_load(NULL);
+
+  assert_string_equal("14C, Windy", s_text_layer_text);
+}
+
 static void test_should_display_temperature_only_given_no_conditions() {
   *(config()) = (Config) {
     .weather_conditions = "",
     .weather_temp = 14,
     .weather_last_updated = time(NULL),
-    .weather_enabled = true
+    .weather_enabled = true,
+    .weather_temp_unit = TEMP_UNIT_CELSIUS
   };
   
   weather_window_load(NULL);
 
   assert_string_equal("14C", s_text_layer_text);
+}
+
+static void test_should_display_temperature_in_fahrenheit_given_unit_is_fahrenheit() {
+  time_t now = time(NULL);
+  *(config()) = (Config) {
+    .weather_last_updated = now - (60 * 60),
+    .weather_enabled = true
+  };
+
+  // Setup the app message callbacks
+  weather_init();
+  // Send the initial phone message so the app knows it's ready to send requests
+  assert_false(s_send_message == NULL);
+  s_send_message(NULL, NULL);
+
+  // Request an update
+  weather_update(localtime(&now));
+
+  // Now fake the async response - returned via dict_read_first
+  temperature = make_tuple(KEY_TEMPERATURE, TUPLE_INT, sizeof(int));
+  temperature->value->int32 = 28;
+  conditions = make_tuple(KEY_CONDITIONS, TUPLE_CSTRING, 7);
+  strcpy(conditions->value->cstring, "Cloudy");
+  temperature_unit = make_tuple(KEY_TEMPERATURE_UNIT, TUPLE_INT, sizeof(int));
+  temperature_unit->value->int32 = TEMP_UNIT_FAHRENHEIT;
+
+  s_send_message(NULL, NULL);
+
+  assert_string_equal("28F, Cloudy", s_text_layer_text);
+
+  free(temperature);
+  free(conditions);
+  free(temperature_unit);
 }
 
 // Text fixture stuff
@@ -243,6 +301,7 @@ static void test_setup() {
   *((int*)s_weather_layer) = 10;
   temperature = NULL;
   conditions = NULL;
+  temperature_unit = NULL;
   dict_next_count = 0;
   received_msg_count = 0;
 }
@@ -265,9 +324,11 @@ void weather_layer_test_fixture(void) {
   fixture_teardown(test_teardown);
 
   run_test(test_should_display_saved_weather_given_recent_data);   
+  run_test(test_should_display_temperature_in_celsius_given_v1_config);
   run_test(test_should_display_temperature_only_given_no_conditions);
   run_test(test_should_display_updated_weather_given_no_recent_update);   
   run_test(test_should_delay_update_retries_given_no_response);   
+  run_test(test_should_display_temperature_in_fahrenheit_given_unit_is_fahrenheit);
 
   test_fixture_end();       
 }

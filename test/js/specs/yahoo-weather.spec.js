@@ -1,5 +1,6 @@
 var request = require('request');
 var api = require('../../../src/js/weather-services/yahoo-weather.js');
+var config = require('../../../src/js/config.js');
 
 describe('Yahoo Weather API', function() {
   var sampleResponse;
@@ -30,7 +31,6 @@ describe('Yahoo Weather API', function() {
 
   it('should return \'unknown\' if condition code is not recognised', function(done) {
     sampleResponse.query.results.channel.item.condition.code = -1;
-
     api.getCurrentConditions(coords, function(values) {
       expect(values.conditions).toBe('unknown');
       done();
@@ -42,15 +42,22 @@ describe('Yahoo Weather API', function() {
       sampleResponse.query.results.channel.item.condition.code = i;
       api.getCurrentConditions(coords, function(values) {
         expect(values.conditions.length).toBeLessThan(9);
-
         if (i < 47)
           testNext(i + 1);
         else
           done();
       });
     };
-
     testNext(0);
   });
 
+  it('should return a valid temperature in fahrenheit given temperature unit is fahrenheit', function(done) {
+    var origSettings = config.settings;
+    config.settings = { temperatureUnit: config.FAHRENHEIT };
+    api.getCurrentConditions(coords, function(values) {
+      expect(values.temp).toBe(61);
+      config.settings = origSettings;
+      done();
+    });
+  });
 });

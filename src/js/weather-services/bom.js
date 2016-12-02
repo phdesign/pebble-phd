@@ -1,9 +1,14 @@
 var bom = require('bom-api');
+var utils = require('../utils.js');
+var config = require('../config.js');
 
 var readWeatherValues = function(rawData) {
   var latestReading = rawData[0];
+  var temperature = latestReading.air_temp;
+  if (config.settings.temperatureUnit !== config.CELSIUS) 
+    temperature = utils.celciusToFahrenheit(temperature);
   return {
-    temp: latestReading.air_temp,
+    temp: Math.round(temperature),
     // BOM JSON feed doesn't really give a weather summary, best bet is their cloud reading.
     conditions: '' //latestReading.cloud === '-' ? '' : latestReading.cloud
   };

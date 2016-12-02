@@ -19,7 +19,8 @@
   "appKeys": {
     "KEY_TEMPERATURE": 0,
     "KEY_CONDITIONS": 1,
-    "KEY_SHOW_WEATHER": 2
+    "KEY_SHOW_WEATHER": 2,
+    "KEY_TEMPERATURE_UNIT": 3
   },
   "resources": {
     "media": [

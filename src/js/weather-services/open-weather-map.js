@@ -1,6 +1,7 @@
 var utils = require('../utils.js');
 var request = require('request');
 var keys = require('../../../keys.json');
+var config = require('../config.js');
 
 function getShortConditionText(conditionCode) {
   var remap = {
@@ -89,8 +90,13 @@ function buildRequestUrl(lat, lon) {
 }
 
 function readWeatherValues(rawData) {
+  var temperature = rawData.main.temp;
+  if (config.settings.temperatureUnit === config.CELSIUS) 
+    temperature = utils.kelvinToCelsius(temperature);
+  else
+    temperature = utils.kelvinToFahrenheit(temperature);
   return {
-    temp: utils.kelvinToCelsius(rawData.main.temp),
+    temp: Math.round(temperature),
     conditions: getShortConditionText(rawData.weather[0].id)
   };
 }

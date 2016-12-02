@@ -12,7 +12,7 @@ static TextLayer *s_weather_layer = NULL;
 static int s_update_retry_count = 0;
 static time_t s_last_retry;
 
-static void update_weather_text(int temperature, char *conditions) {
+static void update_weather_text(int temperature, char *conditions, int temperature_unit) {
   static char weather_info[32];
   char formatted_conditions[11] = "";
 
@@ -21,7 +21,12 @@ static void update_weather_text(int temperature, char *conditions) {
 
   if (strlen(conditions) > 0)
     snprintf(formatted_conditions, sizeof(formatted_conditions), ", %s", conditions);
-  snprintf(weather_info, sizeof(weather_info), "%dC%s", temperature, formatted_conditions);
+  snprintf(weather_info, 
+      sizeof(weather_info), 
+      "%d%s%s", 
+      temperature, 
+      (temperature_unit == TEMP_UNIT_FAHRENHEIT) ? "F" : "C",
+      formatted_conditions);
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Update weather %s", weather_info);
   text_layer_set_text(s_weather_layer, weather_info);
@@ -46,6 +51,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         snprintf(config()->weather_conditions, sizeof(config()->weather_conditions), "%s", t->value->cstring);
         weather_information_received = true;
         break;
+      case KEY_TEMPERATURE_UNIT:
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Received temp unit %d", (int)t->value->int32);
+        config()->weather_temp_unit = (int)t->value->int32;
+        weather_information_received = true;
+        break;
       case KEY_SHOW_WEATHER:
         config()->weather_enabled = t->value->int32 > 0;
         APP_LOG(APP_LOG_LEVEL_DEBUG, "s_weather_enabled %s", config()->weather_enabled ? "true" : "false");
@@ -63,7 +73,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   if (weather_information_received) {
     config()->weather_last_updated = time(NULL);
     s_update_retry_count = 0;
-    update_weather_text(config()->weather_temp, config()->weather_conditions);
+    update_weather_text(config()->weather_temp, config()->weather_conditions, config()->weather_temp_unit);
   }
 }
 
@@ -87,7 +97,7 @@ static void load_last_weather() {
 
   if (seconds_since_last_update < seconds_till_weather_expires) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Last weather saved %s. It's still valid so we'll use it", format_date_time(config()->weather_last_updated));
-    update_weather_text(config()->weather_temp, config()->weather_conditions);
+    update_weather_text(config()->weather_temp, config()->weather_conditions, config()->weather_temp_unit);
   }
   else {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Last weather saved %s. It's stale so we'll ignore it", format_date_time(config()->weather_last_updated));
