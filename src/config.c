@@ -37,7 +37,7 @@ static void read_current_persist(void) {
 
 static void read_v1_persist(void) {
   if (persist_exists(PERSIST_KEY_CONFIG)) {
-    Config_v1 config_v1 = (Config_v1){0};
+    Config_v1 config_v1 = (Config_v1){{0}};
     persist_read_data(PERSIST_KEY_CONFIG, &config_v1, sizeof(config_v1));
     memcpy(&s_config, &config_v1, sizeof(config_v1));
     s_config.weather_temp_unit = TEMP_UNIT_CELSIUS;
