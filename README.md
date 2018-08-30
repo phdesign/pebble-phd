@@ -15,6 +15,14 @@ This requires node and npm to be installed
 4. Run `bower install`
 This requires bower to be installed, `sudo npm install -g bower`
 
+5. Create `keys.json` file in project root for secrets
+```
+{
+    "googleServerKey": "xx",
+    "openWeatherMapAppId": "xx"
+}
+```
+
 ## To run in emulator
 
 This will compile all C and JavaScript and run both C and JavaScript tests.
