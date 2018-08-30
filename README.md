@@ -33,6 +33,12 @@ pebble clean && pebble build
 pebble install --emulator basalt --logs
 ```
 
+## To deploy to a device
+
+```
+pebble install --phone <ip_address>
+```
+
 ## To run tests
 
 To run just the tests and JavaScript build again:
