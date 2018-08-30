@@ -7,6 +7,7 @@ A minimalistic digital watchface for pebble with date
 For Windows 10, follow these instructions: https://gist.github.com/thomasstoeckert/98567adaca27de20d4487d989a4ac5b0.
 
 2. Now the Pebble Developer is dead, download the SDK from here: https://cdn.discordapp.com/attachments/264746316477759489/470048827391475742/sdk-core-4.3.tar.bz2
+or here: https://github.com/aveao/PebbleArchive/raw/master/SDKCores/sdk-core-4.3.tar.bz2
 And run `pebble sdk install /path/to/sdk-core-4.3.tar.bz2`
 
 3. Run `npm install`
